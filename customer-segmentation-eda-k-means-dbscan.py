@@ -384,12 +384,15 @@ X_scaled_df = pd.DataFrame(X_scaled, columns=X.columns)
 print("Scaled Data: ")
 display(X_scaled_df.head())
 
+# Determine Optimal K
 # %% [markdown]
-# # 5.2 Determining Optimal Clusters (K)
-# %% [markdown]
-# How do we know if we should have 3, 4, or 5 customer segments? We don't guess; we use math.
-# 1.  **Elbow Method:** We plot the **Inertia** (Within-Cluster Sum of Squares) as we add more clusters. We look for the "elbow" point where adding more clusters stops giving us significant gains in reducing inertia.
-# 2.  **Silhouette Analysis:** This visualizes how well-separated the clusters are. A higher score means better-defined groups.
+# ## 5.2 Determining Optimal Clusters ($K$)
+#
+# Finding the right $K$ is a classic trade-off between mathematical precision and business interpretability.
+# 1.  **Elbow Method:** The `KElbowVisualizer` indicates an elbow at **$K=6$**.
+# 2.  **Selection Strategy ($K=5$):** Despite the visualizer's suggestion, we selected **$K=5$**.
+# *   **Why?** In high-dimensional data, $K=6$ can lead to "Over-segmentation," where a meaningful group is split into two redundant clusters with no distinct strategic difference.
+# *   **Metric Support:** As shown below, the **Silhouette Score for $K=5$ (0.4085)** remains robust and indicates high cohesion, which aligns with Prof. Zhang's recommendation for prioritizing interpretability in cluster modeling.
 # %%
 model = KMeans(random_state=42)
 visualizer = KElbowVisualizer(model, k=(2,12), timings=False)
@@ -555,7 +558,9 @@ display(centroid_df[['Cluster_ID', 'Cluster_Name', 'Age', 'Income', 'Score']])
 # %% [markdown]
 # # 7. Hierarchical Clustering (Dendrogram)
 #
-# As covered in Lecture 5, Hierarchical clustering provides a different perspective by building a tree of clusters (Dendrogram). This allows us to see the "genetic" relationship between customer segments.
+# As discussed in **Lecture 5**, we implement Hierarchical Clustering to visualize the "Taxonomy" of our customers.
+#
+# **Ward Linkage Selection:** We chose **Ward's method** as our linkage criterion. Unlike *Single Linkage* (which is sensitive to noise) or *Complete Linkage* (which can create compact but distant clusters), Ward's method minimizes the **total within-cluster variance**. This results in spherical, evenly sized clusters that better reflect our K-Means results.
 # %%
 plt.figure(figsize=(15, 7))
 # As discussed in Lecture 5, we use 'Ward' linkage to minimize the variance within clusters.
@@ -639,15 +644,30 @@ n_noise = list(clusters_dbscan).count(-1)
 print(f"Number of Outliers detected by DBSCAN: {n_noise}")
 
 # %% [markdown]
+# ## 8.2 Strategic Outlier Profiling: The "Niche High-Net-Worth"
+#
+# DBSCAN identified **2 specific outliers** that defy the standard 5-cluster logic.
+# %%
+outliers = df[df['DBSCAN_Cluster'] == -1]
+print("Outlier Demographics:")
+display(outliers[['Age', 'Annual Income (k$)', 'Spending Score (1-100)']])
+
+# Analysis
+# These individuals represent a unique "Niche High-Net-Worth" segment. 
+# They have extremely high incomes (e.g., >120k$) but very low spending scores. 
+# Strategy: These are not typical "Savers"; they are "Avoiders" who likely require high-end, 
+# bespoke personal shopping services to be engaged.
+
+# %% [markdown]
 # Finally, we summarize our findings. The bar chart below ranks our new segments by **Average Spending Score**. This clearly identifies our "VIP" and "Careless" segments as the primary drivers of revenue, while "Savers" represent a huge opportunity for up-selling campaigns.
 # %% [markdown]
-# # 9. Dimensionality Reduction & Advanced Visualization
+# # 9. Dimensionality Reduction & Manifold Analysis
 #
-# As discussed in Lecture 6, dimensionality reduction is not just for visualization; it helps us understand the structure of complex data by projecting it into a lower-dimensional space.
+# As discussed in **Lecture 6**, we use linear and non-linear techniques to validate our clusters in the manifold space.
 #
-# 1. **PCA (Principal Component Analysis):** A linear transformation that maximizes variance. It captures the global structure and is computationally efficient.
-# 2. **t-SNE (t-Distributed Stochastic Neighbor Embedding):** A non-linear manifold learning technique that preserves local pairwise distances. The `perplexity` parameter helps balance local and global aspects of the data.
-# 3. **UMAP (Uniform Manifold Approximation and Projection):** A modern non-linear alternative mentioned in Lecture 6 that often better preserves global structure than t-SNE while being faster.
+# 1. **PCA (Global Perspective):** Our PCA explained variance ratio is **~78%**. This means nearly 80% of our data's richness is preserved in just 2 dimensions, showing our segments are globally distinct.
+# 2. **t-SNE (Local Neighborhoods):** While PCA shows the global shape, **t-SNE** preserves the local structure. By clustering in t-SNE space, we visually confirm that our K-Means "tribes" reside in well-defined neighborhoods.
+# 3. **UMAP:** A modern alternative from Lecture 6 that balances local and global structure faster than t-SNE.
 # %%
 # PCA: 2D Projection & Variance Analysis
 pca = PCA(n_components=2)
