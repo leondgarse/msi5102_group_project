@@ -71,6 +71,12 @@ teal_corporate_palette = [
 my_teal_color = "#3A6F73"
 sns.set_palette(teal_corporate_palette)
 
+# Clean, professional plot styling
+plt.rcParams['axes.edgecolor'] = '#333333'
+plt.rcParams['axes.linewidth'] = 0.8
+plt.rcParams['grid.alpha'] = 0.3
+plt.rcParams['grid.linestyle'] = '--'
+
 # %% [markdown]
 # # 1.2 Data Loading & Initial Inspection
 # %% [markdown]
@@ -89,6 +95,8 @@ if COLAB:
     print("Detected Google Colab environment. Cloning repository...")
     if not os.path.exists('msi5102_group_project'):
         os.system('git clone https://github.com/leondgarse/msi5102_group_project.git')
+    else:
+        os.system('cd msi5102_group_project && git pull')
     path = '/content/msi5102_group_project/Mall_Customers.csv'
 else:
     print("Detected local environment.")
@@ -181,18 +189,25 @@ plt.show()
 # 1. Boxplots for Demographics
 plt.figure(figsize=(10, 15))
 
+# Use a clean, professional boxplot style
+boxplot_kwargs = {
+    'palette': teal_corporate_palette,
+    'linewidth': 1.5,
+    'fliersize': 4
+}
+
 plt.subplot(3, 1, 1)
-sns.boxplot(x='Gender', y='Spending Score (1-100)', data=df)
+sns.boxplot(x='Gender', y='Spending Score (1-100)', data=df, **boxplot_kwargs)
 plt.title('Spending Score by Gender')
 plt.xlabel('Gender')
 
 plt.subplot(3, 1, 2)
-sns.boxplot(x='Age_Group', y='Spending Score (1-100)', data=df)
+sns.boxplot(x='Age_Group', y='Spending Score (1-100)', data=df, **boxplot_kwargs)
 plt.title('Spending Score by Age Group')
 plt.xlabel('Age Group')
 
 plt.subplot(3, 1, 3)
-sns.boxplot(x='Income_Level', y='Spending Score (1-100)', data=df)
+sns.boxplot(x='Income_Level', y='Spending Score (1-100)', data=df, **boxplot_kwargs)
 plt.title('Spending Score by Income Level')
 plt.xlabel('Income Level')
 
@@ -252,7 +267,7 @@ age_trend = df_trend.groupby(['Age_Bin_5', 'Gender'])['Spending Score (1-100)'].
 
 plt.figure(figsize=(10, 6))
 sns.lineplot(data=age_trend, x='Age_Bin_5', y='Spending Score (1-100)',
-             hue='Gender', marker='o', palette=teal_corporate_palette)
+             hue='Gender', marker='o', palette=teal_corporate_palette[:2])
 
 plt.title('Average Spending Trend by Age (The Spending Cliff)')
 plt.xlabel('Age Group (5-Year Bins)')
@@ -408,15 +423,17 @@ df['Cluster'] = kmeans.fit_predict(X_scaled)
 
 plt.figure(figsize=(10, 6))
 sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)',
-                hue='Cluster', s=100, legend='full', edgecolor='white', linewidth=2)
+                hue='Cluster', s=100, legend='full', edgecolor='white', linewidth=1.5,
+                palette=teal_corporate_palette[:5])
 
 centroids = scaler.inverse_transform(kmeans.cluster_centers_)
-plt.scatter(centroids[:, 1], centroids[:, 2], s=300, c='red', marker='X', label='Centroids')
+plt.scatter(centroids[:, 1], centroids[:, 2], s=300, c='red', marker='X', label='Centroids', edgecolors='white', linewidth=1.5)
 
-plt.title('Customer Segments (Final Model Result)')
+plt.title('K-Means Cluster Assignment')
 plt.xlabel('Annual Income (k$)')
 plt.ylabel('Spending Score (1-100)')
 plt.legend(title='Cluster ID')
+plt.grid(True, alpha=0.3)
 plt.show()
 
 # %% [markdown]
@@ -429,18 +446,17 @@ ax = fig.add_subplot(111, projection='3d')
 
 # Scatter plot
 scatter = ax.scatter(df['Age'], df['Annual Income (k$)'], df['Spending Score (1-100)'], 
-                     c=df['Cluster'], cmap='viridis', s=60, edgecolors='k', alpha=0.7)
+                     c=df['Cluster'], cmap='viridis', s=60, edgecolors='white', alpha=0.8, linewidth=0.5)
 
 # Labels
 ax.set_xlabel('Age')
 ax.set_ylabel('Annual Income (k$)')
 ax.set_zlabel('Spending Score (1-100)')
-ax.set_title('3D Visualization of Customer Segments')
+ax.set_title('3D Feature Space: Customer Segments')
 
 # Legend
 legend1 = ax.legend(*scatter.legend_elements(), title="Clusters")
 ax.add_artist(legend1)
-
 plt.show()
 
 
@@ -461,18 +477,24 @@ profile['Count'] = df['Cluster'].value_counts()
 profile
 
 # %%
-plt.figure(figsize=(15, 5))
+plt.figure(figsize=(15, 6))
+
+boxplot_kwargs_cluster = {
+    'palette': teal_corporate_palette[:5],
+    'linewidth': 1.2,
+    'fliersize': 3
+}
 
 plt.subplot(1, 3, 1)
-sns.boxplot(x='Cluster', y='Age', data=df)
-plt.title('Age Distribution by Cluster')
+sns.boxplot(x='Cluster', y='Age', data=df, **boxplot_kwargs_cluster)
+plt.title('Age by Cluster')
 
 plt.subplot(1, 3, 2)
-sns.boxplot(x='Cluster', y='Annual Income (k$)', data=df)
-plt.title('Income Distribution by Cluster')
+sns.boxplot(x='Cluster', y='Annual Income (k$)', data=df, **boxplot_kwargs_cluster)
+plt.title('Income by Cluster')
 
 plt.subplot(1, 3, 3)
-sns.boxplot(x='Cluster', y='Spending Score (1-100)', data=df)
+sns.boxplot(x='Cluster', y='Spending Score (1-100)', data=df, **boxplot_kwargs_cluster)
 plt.title('Spending Score by Cluster')
 
 plt.tight_layout()
@@ -571,9 +593,10 @@ df['DBSCAN_Cluster'] = clusters_dbscan
 plt.figure(figsize=(10, 6))
 sns.scatterplot(data=df, x='Annual Income (k$)', y='Spending Score (1-100)',
                 hue='DBSCAN_Cluster', s=100,
-                edgecolor='white', linewidth=2)
+                palette='viridis',
+                edgecolor='white', linewidth=1.5)
 
-plt.title('DBSCAN Clustering: Detecting Outliers (Noise = -1)')
+plt.title('DBSCAN: Outlier Detection')
 plt.xlabel('Annual Income (k$)')
 plt.ylabel('Spending Score (1-100)')
 plt.legend(title='Cluster ID')
@@ -632,22 +655,22 @@ plt.figure(figsize=(18, 5))
 
 # PCA Plot
 plt.subplot(1, 3, 1)
-plt.scatter(X_pca[:, 0], X_pca[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='k', alpha=0.7)
-plt.title(f'PCA (Expl. Var: {sum(var_ratio):.2f})')
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='white', alpha=0.7)
+plt.title(f'PCA Projection (Expl. Var: {sum(var_ratio):.2f})')
 plt.xlabel('PC1')
 plt.ylabel('PC2')
 
 # t-SNE Plot
 plt.subplot(1, 3, 2)
-plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='k', alpha=0.7)
-plt.title('t-SNE (Non-linear Mapping)')
+plt.scatter(X_tsne[:, 0], X_tsne[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='white', alpha=0.7)
+plt.title('t-SNE Embeddings')
 plt.xlabel('t-SNE 1')
 plt.ylabel('t-SNE 2')
 
 # UMAP Plot
 plt.subplot(1, 3, 3)
-plt.scatter(X_umap[:, 0], X_umap[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='k', alpha=0.7)
-plt.title('UMAP (Manifold Assumption)')
+plt.scatter(X_umap[:, 0], X_umap[:, 1], c=df['Cluster'], cmap='viridis', edgecolors='white', alpha=0.7)
+plt.title('UMAP Manifold Projection')
 plt.xlabel('UMAP 1')
 plt.ylabel('UMAP 2')
 
