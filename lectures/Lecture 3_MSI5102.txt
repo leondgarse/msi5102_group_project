@@ -1,0 +1,197 @@
+MSI5102
+Essentials of ML
+Lecture 3: Probabilistic Predictors
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Probabilistic Predictor
+
+▪ A typical predictor outputs one value 𝑦,
+ො given a data point x
+▪ We called it a point predictor, since it makes just one guess for one sample
+▪ For some applications, we want to output more than just a single guess, given
+a data point x
+-- An ordered list of guesses, for example,
+𝑦ො1 , 𝑦ො2 , 𝑦ො3 (first, second, third guesses),
+or
+-- A probability distribution on a finite set,
+e.g., Weather conditions: 5% rain, 15% cloudy, 80% sunshine
+▪ The former is called a list predictor
+▪ The latter is called a probabilistic predictor
+
+List Predictor
+▪ A list classifier produces an ordered list of guesses:
+𝑦ො1 , 𝑦ො2 , … , 𝑦ොt
+▪ We interpret as our top, second, …, t-th guesses
+▪ We’re happiest if 𝑦 = 𝑦ො1 i.e., our top guess is correct,
+a bit less happy …
+▪ Examples: Google search and recommendation systems
+-- x ∈ U is a user query,
+-- y ∈ Y is the item user wants
+-- List classifier gives our top 10 (ordered) guesses
+
+Probabilistic Predictor
+▪ A probability distribution on a finite set Y is a function 𝑝: 𝑌 → ℝ,
+such that
+-- 𝑝 𝑦 ≥ 0 for each 𝑦 ∈ 𝑌
+Weather forecast
+-- σ𝑦∈𝑌 𝑝(𝑦) = 1.
+𝑌 = 𝐶𝐿𝑂𝑈𝐷, 𝑅𝐴𝐼𝑁, 𝑆𝐻𝐼𝑁𝐸 .
+▪ Assume 𝑌 = 𝑦1 , 𝑦2 , … , 𝑦𝑘 , a probability distribution
+Today’s condition:
+is usually denoted as a vector (𝑝 𝑦 , 𝑝 𝑦 , … , 𝑝 𝑦 )
+1
+
+2
+
+𝑘
+
+p(CLOUD)=0.10, p(RAIN)=0.05,
+▪ A probabilistic classifier G produces a probability
+distribution 𝑝Ƹ = 𝐺(𝑥) on Y, given a data point x
+
+p(SHINE)=0.85
+
+▪ This means:
+-- G is a function that takes 𝑥 ∈ 𝑋 and returns
+a distribution function 𝑝Ƹ
+-- we can call 𝑝(𝑦
+Ƹ i ) the probability that ​𝑦 = 𝑦𝑖 , i.e. the guess is 𝑦𝑖
+▪ At any data point 𝑥 ∈ 𝑋 , calling the predictor G returns
+the probability distribution 𝑝Ƹ
+
+Point Predictor is a special case of Probabilistic Predictor
+▪ If a point classifier predicts 𝑦ො given x, it implies:
+a distribution that has 100% probability on our point guess 𝑦ො ,
+and 0% on others
+▪ That is the following probability distribution
+1, 𝑖𝑓 𝑦 = 𝑦ො
+𝑝Ƹ 𝑦 = ቊ
+0, otherwise
+▪ Such a probabilistic predictor is likely poor. This is why we introduce
+probabilistic predictor
+▪ Neural network usually outputs a probabilistic predictor
+
+K-Nearest-Neighbour Prob. Predicator
+▪ Find the k nearest neighbors 𝑥′1 , 𝑥′2 , … , 𝑥′𝑘 of x
+among the input sample points in feature space
+▪ Use the labels of these neighbors to compute a
+distribution on the labels.
+Example: k = 6 for the instance shown below.
+
+Feature space for can cancer prediction
+
+Assessing Probabilistic Predictors
+
+Use temp, humidity, wind and pressure to predicate next day’s outlook
+
+▪ Assume G be a probabilistic predictor for a classification task with samples:
+𝑥 (1) , 𝑦 (1) , 𝑥 (2) , 𝑦 (2) , … , (𝑥 (𝑛) , 𝑦 (𝑛) )
+▪ For each data point x, G gives a distribution 𝑝ෝ =G(x) on the label space,
+assigning each possible label y a probability value 𝑝ෝ (y).
+-- 𝑝ෝ is a function or distribution that has a prob value for each possible label
+
+▪ Ideally, we should have high probability 𝑝ෝ (y) for the true label y for x.
+▪ For weather prediction example:
+-- we want 𝑝ෝ (RAIN) large for a rain day, 𝑝ෝ (CLOUD) large for a cloudy day
+𝑝ෝ (SUNNY) large for a sunshine day
+▪ We use log likelihood to formalize this intuition.
+Predicated outcome
+C (5%), S(91%), R(4%)
+C (85%), S(5%), R(10%)
+C (15%), S(3%), R(82%)
+
+Likelihood
+▪ Assume we learn a probabilistic predictor 𝑝ෝ =G(x) on data set:
+𝑥 (1) , 𝑦 (1) , 𝑥 (2) , 𝑦 (2) , … , (𝑥 (𝑛) , 𝑦 (𝑛) )
+
+▪ At the j-th data point, the predicted distribution on the finite label set is
+𝑝Ƹ (𝑗) =G(𝑥 (𝑗) )
+▪ The likelihood of the predictor is the following probability
+𝑃 𝑦 (1) , 𝑦 (2) , …, 𝑦 (𝑛) = ς𝑛𝑗=1 𝑝Ƹ (𝑗) 𝑦 (𝑗)
+
+(product of predicted prob for true labels)
+
+▪ This likelihood measures how well the predicted distribution matches the data
+▪ We can use this likelihood to compare two prob predictors on test data
+Predicated outcome
+C (5%), S(91%), R(4%)
+C (85%), S(5%), R(10%)
+C (15%), S(3%), R(82%)
+
+𝑃 𝑦 (1) , 𝑦 (2) , 𝑦 (3)
+= 0.91 ∗ 0.85 ∗ 0.82
+= 0.634
+
+Negative Log-Likelihood
+▪ (Weakness) The likelihood is a product of some probabilities and often very small.
+▪ It is more convenient to work the negative log-Likelihood
+−log 𝑃 𝑦 1 , 𝑦 2 , …, 𝑦 𝑛
+
+= − log ς𝑛𝑗=1 𝑝Ƹ 𝑗 𝑦 𝑗
+
+= − σ𝑛𝑗=1 log 𝑝Ƹ 𝑗 𝑦 𝑗
+
+▪ The measure is nonnegative; The smaller it is, the better.
+▪ To compare likelihood on different size data sets
+(e.g., train and test),
+we use the average negative log-likelihood:
+1
+ℒ 𝐺 = − σ𝑛𝑗=1 log 𝑝Ƹ 𝑗 𝑦 𝑗
+𝑛
+
+− log 𝑃 𝑦 (1) , 𝑦 (2) , 𝑦 (3)
+= − log 0.634
+= −(log 0.91 + log 0.85 + log 0.82)
+= 0.4557
+
+Predicated outcome
+C (5%), S(91%), R(4%)
+C (85%), S(5%), R(10%)
+C (15%), S(3%), R(82%)
+
+Cross entropy
+▪ Consider two probability distributions p, q on finite Y.
+▪ The entropy of the distribution p is defined as:
+𝐻 𝑝 = − σ𝐾
+𝑖=1 𝑝(𝑦𝑖 )log 𝑝 𝑦𝑖
+▪ The cross entropy of p relative to q is defined as:
+𝐻 𝑞, 𝑝 = − σ𝐾
+𝑖=1 𝑞(𝑦𝑖 )log 𝑝 𝑦𝑖
+•
+
+Assume
+-- p is the true distribution
+-- q is the predicted distribution
+• Cross-entropy measures how hard it is to use one
+probability distribution q to encode data that is actually
+generated from another distribution p
+• If q is close to p → cross-entropy is small
+If q is far from p → cross-entropy is large
+
+Kullback-Leibler Divergence
+▪ Consider two probability distributions p, q on finite Y.
+▪ The entropy of the distribution p is defined as:
+𝐻 𝑝 = − σ𝐾
+𝑖=1 𝑝(𝑦𝑖 )log 𝑝 𝑦𝑖
+▪ The cross entropy of p relative to q is defined as:
+𝐻 𝑞, 𝑝 = − σ𝐾
+𝑖=1 𝑞(𝑦𝑖 )log 𝑝 𝑦𝑖
+▪ The Kullback-Leibler divergence is defined as
+𝑑𝑘𝑙 𝑝||𝑞 = 𝐻 𝑞, 𝑝 − 𝐻(𝑞) = σ𝐾
+𝑖=1 𝑝(𝑦𝑖 )[log 𝑝 𝑦𝑖 − log 𝑞(𝑦𝑖 )]
+which has the following properties:
+-- non-negative
+-- asymmetric
+-- zero if and only if p = q.
+▪ 𝑑𝑘𝑙 𝑝||𝑞 is the extra cost to understand p due to using wrong model q
+▪ KL divergence is used as a loss function in neural network
+
+Summary
+▪ A point predictor makes a single guess of y, given x
+▪ A probabilistic predictor guesses a probability distribution on Y, given x
+▪ We assess a probabilistic classifier by its average log-likelihood on test data
+
+

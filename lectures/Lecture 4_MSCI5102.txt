@@ -1,0 +1,1557 @@
+MSI5102
+Essentials of ML
+Lecture 4: Decision/Regression Trees
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Machine Learning is not just predictive performance
+
+“Among the 29 challenge winning solutions 3 published
+at Kaggle’s blog during 2015, 17 solutions used XGBoost.
+Among these solutions, eight solely used XGBoost to train
+the model, while most others combined XGBoost with neural
+nets in ensembles. “
+
+Decision Trees
+
+Naïve Bayes
+Linear Regressions
+K-Nearest Neighbor
+
+Supervised
+
+Decision Tree
+SVM
+Neural Network
+
+K-means
+
+Machine
+Learning
+
+Agglomerative
+
+Unsupervised
+DBSCAN
+
+Gaussian Mixture
+
+SemiSupervised
+
+…
+
+SemiSupervised
+
+…
+
+Animal Recognition
+Gray?
+Y
+
+N
+
+Large?
+
+Fly?
+
+Y
+
+N
+
+Elephant
+
+Mouse
+
+Y
+
+N
+
+Night
+Active?
+
+Frog
+Y
+
+N
+
+Owl
+
+Eagle
+
+Decision Trees for Classification
+X>=a?
+
+Y
+Y
+
++
++++ +
+
+b
+
+Y>=b?
+Y
+
+N
+
+N
+Y>=b?
+Y
+
+N
+
++
+a
+
+X
+
+A decision tree (DT) is a tree-structured model
+for prediction, where
+-- internal nodes test (evaluate) an attribute (feature),
+-- branches represent the possible values or outcomes
+of that test, and
+-- leaves output the final predicted class for
+a sample instance.
+
+Why DTs could be a good AI choice?
+-- output is discrete
+-- interpretable
+-- no large data available
+-- classes are disjoint
+
+How to construct a decision tree?
+• Idea: Select important attribute for splitting samples repeatedly.
+• Question: How to select the best attribute to generate the most compact branches?
+• We consider a binary classification problem
+-- S: the set of training samples
+-- 𝑆 : the subset of negative examples
+-- 𝑆 : the subset of positive examples
+• We have:
+-- 𝑝
+
+| |
+,
+| |
+
+𝑝
+
+| |
+| |
+
+-- E(S)
+𝑝 log 𝑝
+𝑝 log 𝑝
+-- From information theory, this entropy quantifies the (expected) number of
+bits in a string to represent such a class.
+-- DT is a kind of “string” representation of the class, so this gives an lower bound
+on the complexity DT
+
+Algorithm for Constructing DT
+-- Each node represents a subset of samples S’ and
+therefore is associated with an entropy
+-- We choose an unused feature A that has the maximum value of the Gain(S’, A):
+Gain(S’, A)=E (S’)
+
+∑ ∈
+
+E S
+
+to split the subset into k parts until the full samples are resolved,
+where k is the number of the values of the feature A.
+
+Example: Construction a decision for
+a tennis club to determine whether open to not.
+• For attribute “Outlook”, there are 3 values:
+Sunny, Overcast and Rain.
+• Using Outlook, we have the following partition:
+Outlook
+
+Sunny
+
+Overcast
+
+E=0.94
+
+Rain
+
+Day
+
+Outlook
+
+Temp …
+
+Play
+
+1
+
+Sunny
+
+Hot
+
+N
+
+2
+
+Sunny
+
+Hot
+
+N
+
+3
+
+Overcast Hot
+
+Y
+
+4
+
+Rain
+
+Mild
+
+Y
+
+5
+
+Rain
+
+Cool
+
+Y
+
+6
+
+Rain
+
+Cool
+
+N
+
+7
+
+Overcast Cool
+
+Y
+
+8
+
+Sunny
+
+Mild
+
+N
+
+9
+
+Sunny
+
+Cool
+
+Y
+
+10
+
+Rain
+
+Mild
+
+Y
+
+11
+
+Sunny
+
+Mild
+
+Y
+
+[ 2(+), 3(-)]
+
+[ 4(+), 0(-)]
+
+[ 3(+), 2(-)]
+
+12
+
+Overcast Mild
+
+Y
+
+E=0.97
+
+E=0
+
+E=0.97
+
+13
+
+Overcast Hot
+
+Y
+
+14
+
+Rain
+
+N
+
+Gain(S, “outlook”)=0.246
+
+Mild
+
+E=0.94
+
+Temp
+
+Hot
+
+Mild
+
+Final DT:
+
+[ 2(+), 2(-)]
+
+[ 4(+), 2(-)]
+
+[ 3(+), 2(-)]
+
+E=1.0
+
+E=0.92
+
+E=0.81
+
+Gain(S, “temp”)
+
+Temp
+
+Hot
+
+= E(s)
+
+= 0.029
+
+E=0.94
+
+Overcast
+
+Rain
+
+Cool
+Sunny
+
+𝐸 "hot"
+
+Outlook
+
+𝐸 "𝑚𝑖𝑙𝑑"
+
+𝐸 "𝑐𝑜𝑙𝑑"
+
+Mild Cool
+
+Play
+
+Temp
+
+Hot
+
+Mild Cool
+
+Day
+
+Outlook
+
+Temp …
+
+Play
+
+1
+
+Sunny
+
+Hot
+
+N
+
+2
+
+Sunny
+
+Hot
+
+N
+
+3
+
+Overcast Hot
+
+Y
+
+4
+
+Rain
+
+Mild
+
+Y
+
+5
+
+Rain
+
+Cool
+
+Y
+
+6
+
+Rain
+
+Cool
+
+N
+
+7
+
+Overcast Cool
+
+Y
+
+8
+
+Sunny
+
+Mild
+
+N
+
+9
+
+Sunny
+
+Cool
+
+Y
+
+10
+
+Rain
+
+Mild
+
+Y
+
+11
+
+Sunny
+
+Mild
+
+Y
+
+12
+
+Overcast Mild
+
+Y
+
+13
+
+Overcast Hot
+
+Y
+
+14
+
+Rain
+
+N
+
+Mild
+
+Final DT:
+
+Sunny
+
+Outlook
+
+E=0.94
+
+Overcast
+
+Rain
+
+[4+,0]
+Play
+
+Temp
+
+Hot
+
+Mild Cool
+
+[0+, 2-] [1+, 1-]
+
+[1+,0]
+
+Temp
+
+Hot
+
+Mild Cool
+
+[2+, 1-] [1+, 1-]
+
+Algorithm for Constructing DT
+-- Each node represents a subset of samples S’ and
+therefore is associated with an entropy
+-- We choose an unused feature A that has the following gain:
+Gain(S’, A)=E (S’)
+
+∑ ∈
+
+E S
+
+to split the subset in to k parts until the full samples are resolved,
+where k is the number of the values of the feature A.
+-- We prefer short trees
+-- Large tree likely is overfitting.
+-- To avoid overfitting, we
+1. stop growing when the data entropy is less than a threshold.
+2. grow tree and then prune the tree using validation data.
+
+Regression Trees
+
+Relation between drug dosage & drug effectiveness
+(mg = milligram = 10⁻³ gram = 0.001 g)
+
+Josh Starmer video: https://www.youtube.com/watch?v=g9c66TUylZ4
+
+Linear Regression is not useful for this kind of data
+
+Regression Trees
+-- Similar to Decision Trees
+-- Only difference is output a numeric value at each leaf
+Person: Sex (F), Age (25), Dosage (10)
+Effectiveness: ?
+
+Yes
+
+Yes
+
+Yes
+
+The predictor function is:
+1.5,
+
+𝑔 𝑥
+
+𝑥
+
+1.75
+
+𝑥
+
+1.5
+
+3.25
+
+𝑥
+
+3
+
+2
+
+5
+
+4.5
+
+A tree having one feature
+
+𝑖𝑓 𝑥 1.75,
+3,
+𝑖𝑓 1.75 𝑥 3.25
+2,
+𝑖𝑓 3.25 𝑥 5
+4.5,
+𝑖𝑓 𝑥 5
+
+𝑥
+
+0.5
+0.5
+
+𝑥
+0.5
+0.5
+
+The number of regions obtained in partition equals to
+the number of tree leaves in a regression tree.
+
+-- We prefer short trees
+-- Large tree likely is overfitting.
+-- To avoid overfitting, we
+1. stop growing when the data entropy is less than a threshold.
+2. grow tree and then prune the tree using validation data.
+
+Algorithm Building a Regression Tree with Square Loss
+Input:
+
+𝑥
+
+,𝑦
+
+, 𝑥
+
+,𝑦
+
+,…, 𝑥
+
+,𝑦
+
+BuildTree(I={1, 2, …, n}; k):
+𝑘
+if 𝐼
+Set 𝑦 𝑎𝑣𝑒𝑟𝑎𝑔𝑒 ∈ 𝑦
+return Leaf Node (label = 𝑦 )
+else
+for each dimension j and value s
+𝑖 ∈𝐼|𝑥
+𝑠 , 𝑦,
+Set 𝐼 ,
+Set 𝐼 ,
+
+𝑖 ∈𝐼|𝑥
+
+𝑠 , 𝑦,
+
+Set 𝐿 ,
+
+∑∈
+
+𝑦,
+
+,
+
+𝑦
+
+average ∈
+
+,
+
+average ∈
+
+,
+
+∑∈
+
+,
+
+𝑦
+
+𝑦
+𝑦
+
+𝑦,
+
+Set 𝑗 ∗ and 𝑠 ∗ be the dimension and value that has the smallest 𝐿 ,
+return Node 𝑗 ∗ , 𝑠 ∗ ; BuildTree 𝐼 ∗, ∗ , 𝑘 , BuildTree 𝐼 ∗, ∗ , 𝑘
+
+k is the minimum
+number of samples in
+each internal node to
+control the tree size
+
+Why use the average as the output in a leaf?
+Given a number of real numbers 𝑎 , 𝑎 , … , 𝑎
+⋯
+
+their average number 𝑏
+
+is the number that
+
+has the smallest variance
+𝑥
+
+𝑎
+
+𝑥
+
+𝑎
+
+…
+
+𝑥
+
+𝑎
+
+Example: Construction DT for Drug effectiveness prediction with k=7
+Dimension: j=dosage
+Cutoff:
+s =3
+
+The left part has
+1 data sample, both
+the effectiveness value
+are 0.
+In right part,
+there are 18 samples,
+their average is 38.8.
+
+The best split in dosage
+dimension with cutoff s=14.5
+
+6 samples
+
+13 samples
+
+Dimension: j=age
+Cutoff:
+s=50
+
+This is the best split in Age dimension
+
+Dimension: j= Sex
+Cutoff:
+s=1.5
+
+This is the best split in Sex dimension
+
+The best splits in each dimension, with
+square loss values
+
+6 samples
+
+Yes
+
+13 samples
+
+We then grow the rest of the tree just
+using 13 samples
+
+Random Forests
+
+Ensembling
+ Combines multiple models (called base learners) to produce a
+better overall prediction
+ Analogous to making a decision by voting in a committee
+
+Bootstrap aggregating (Bagging)
+ An approach to make and use an ensemble
+ Idea:
+1. Given a training data set D
+2. (Bootstrap step) For k=1, 2, …, K.
+2.1. Draw a new data set 𝐷 of same size
+by sampling with replacement from D
+2.2 Train a model 𝑓 on 𝐷
+3. (Aggregating) Output model 𝑓
+
+defined as:
+
+𝑥
+𝑓 𝑥
+𝑓 𝑥
+⋯ 𝑓 𝑥
+𝑓
+for regression problem, or
+its predicted class at a point is the one
+with the highest vote count at that point
+for classification problem
+
+Sampling with
+Replacement
+
+Random Forest
+ Bagging with decision trees built with extra randomness
+ Idea:
+1. Given a training data set D
+2. For k=1, 2, …, K.
+2.1. Draw a new data set 𝐷 of same size
+by sampling with replacement from D
+2.2 Train a decision tree 𝑇 on 𝐷 by recursively repeating
+the following steps
+-- At each node, selecting m features uniformly at random,
+(without replacement), from all available features
+-- Pick the best split feature among the m ones to
+split the data samples into two groups
+3. Form the final prediction model
+•
+
+Regression  average vote for classification
+
+•
+
+Classification  majority vote
+
+Estimate the Accuracy of a Random Forest
+ The accuracy of a random forest depends on key hyperparameters
+(see below)
+ We can measure the accuracy of our model using the proportion of
+the so-called out-of-bag samples that were correctly classified by the
+random forest
+ Training Process
+
+Build a Random Forest
+
+Estimate the Accuracy
+
+Adjust the hyperparameters used in each step
+
+Key hyperparameters
+ n_estimators: The number of trees in the forest
+ max_features (size of random feature subset)
+ min_samples_split: the min. no. of training samples required at a node for splitting that node
+ min_samples_leaf: the min. no. of training samples that must be present in each leaf node after a split
+
+n_estimators is chosen by validation and trade-off:
+-- Few trees → unstable, high variance
+-- More trees → performance improves
+-- Enough trees → performance plateaus
+-- Choose the value where performance stabilizes
+
+Default max_features
+
+𝑝
+𝑝/3
+
+XGBoost
+
+“Among the 29 challenge winning solutions 3 published
+at Kaggle’s blog during 2015, 17 solutions used XGBoost.
+Among these solutions, eight solely used XGBoost to train
+the model, while most others combined XGBoost with neural
+nets in ensembles. “
+“The most important factor behind the success of XGBoost
+is its scalability in all scenarios. The system runs more than
+ten times faster than existing popular solutions on a single
+machine and scales to billions of examples in distributed or
+memory-limited settings.”
+
+XGBoost: Idea
+ XGBoost repeatedly builds new tree models and append them into
+the ensemble model f:
+𝑟𝑓
+⋯ 𝑟𝑓 ,
+𝑓 𝑓 𝑟𝑓
+where 𝑓 is a tree model, r is the learning rate, a small constant
+ 𝑓 is the one-node tree model for the dataset
+ At each step 𝑗 1 ,
+-- Calculate the error (called residual) of the current model
+𝑓
+
+𝑟𝑓
+
+𝑟𝑓
+
+⋯
+
+𝑟𝑓
+
+for each sample in the dataset
+-- Build a new tree model 𝑓 to predict these residuals
+-- Add this new model into the ensemble of the models.
+
+ Gradient boosting only optimized for the variance so tend to overfit training data
+ XGboost offers a good balance between bias and variance
+ Xgboost offers regularization terms that can improve model generalization).
+
+XGBoost package: https://github.com/dmlc/xgboost
+XGBoost in Python (video) https://www.youtube.com/watch?v=GrJP9FLV3FE
+
+Features
+
+Residual
+16.8
+4.8
+-15.2
+1.8
+5.8
+-14.2
+
+1. First model
+71.2
+
+The ensemble model
+
+71.2
+
+Residual
+
+Updated Residual
+
+16.8
+
+15.1
+
+4.8
+
+4.3
+
+-15.2
+
+-13.7
+
+1.8
+
+1.4
+
+5.8
+
+5.4
+
+-14.2
+
+-12.7
+
+2. Second model built from the residuals The updated ensemble model
+Height <1.6
+Height <1.6
+
+14.7
+
+4.8
+
+Height <1.6
+
+71.2
+
+Blue?
+
+16.8
+
+3.8
+
+0.1
+
+Height <1.6
+
+14.7
+
+3. Third mode built from the updated residuals
+
+The 2nd updated ensemble model
+
+…
+
+…
+
+4.8
+
+Blue?
+
+16.8
+
+3.8
+
+𝑓
+
+𝑓
+
+𝑟𝑓
+
+𝑟𝑓
+
+⋯
+
+𝑟𝑓 ,
+
+Building Regression Trees with Squared Loss
+ At each stage, obtain the tree by splitting nodes repeatedly until
+the node gain is <0 or tree height is big enough
+
+…
+
+ At each node
+-- Assume there are k samples with neg. residuals 𝑔
+-- Calculate the node score from residuals as
+
+𝑦
+
+𝑦
+
+⋯
+
+Score
+
+…
+
+-- for each dimension j and value s
+Set 𝐴
+
+𝑖 ∈𝐼|𝑥
+
+𝑠 , Score
+
+Set B
+
+𝑖 ∈𝐼|𝑥
+
+𝑠 , Score
+
+Gain(j,s)
+
+Score
+
+Score
+
+∑∈
+∑∈
+
+Score
+
+𝛾
+
+-- Set 𝑗 ∗ and 𝑠 ∗ be the dimension and value that have the largest gain Gain(j*,s*)
+-- If Gain(j*,s*) >0, split.
+-- If Gain(j*,s*) < 0, not split. As a leaf, its value is
+
+⋯
+
+Numeric Example: Consider a node with 5 samples.
+The feature under consideration is X.
+
+…
+
+True y
+
+Current Prediction ŷ
+
+Negative residual
+gᵢ = ŷ − y
+
+2
+
+3
+
+2.5
+
+-0.5
+
+3
+
+2
+
+2.5
+
+0.5
+
+6
+
+2.5
+
+-3.5
+
+7
+
+8
+
+2.5
+
+-5.5
+
+9
+
+7
+
+2.5
+
+-4.5
+
+Feature x
+
+5
+
+(Node Score)
+
+…
+
+−0.5 + 0.5 + (−3.5) + (−5.5) + (−4.5)
+
+Split x
+
+6 and x < 6.
+
+A
+
+{ samples with x
+
+B
+
+{sample with x <6}
+
+Gain(x, 6)
+
+33.33
+
+6}
+
+(Node Score) A
+(Node Score) 𝐵
+
+3.06
+
+30.375
+
+𝛾
+
+(−5.5) + (−4.5)
+(−0.5) +0.5+ (−3.5)
+0
+
+( is set to 1)
+
+33.33
+3.06
+(𝛾 is set to 1)
+
+ Prediction value at the left leaf
+𝑦
+
+0.5
+
+0.5
+3 1
+
+3.5
+
+𝑦
+
+4.5
+1
+
+X < 6?
+No
+
+ Prediction value at the right leaf
+5.5
+2
+
+7
+8
+
+10
+3
+
+A:2 samples
+10/3
+
+Yes
+B: 3 samples
+7/8
+
+Hyperparameter Tuning
+
+
+No. of trees (m) in the final XGBoost model:
+𝑙𝑒𝑎𝑟𝑛𝑖𝑛𝑔 𝑟𝑎𝑡𝑒 ∗ 𝑇
+⋯
+𝑙𝑒𝑎𝑟𝑛𝑖𝑛𝑔 𝑟𝑎𝑡𝑒 ∗ 𝑇
+𝑓 𝑇
+
+
+
+Learning rate (default =0.3)
+
+
+
+λ: L2 regularization on leaf weights
+-- Larger λ → stronger regulariza on → simpler model → less overfi ng
+
+
+
+γ: minimum loss reduction to make a split
+-- Larger γ → fewer splits → shallower trees → more conserva ve model.
+
+ Tuning Methods
+-- Grid Search: exhaustive search over all combinations of parameter values
+
+-- Randomized Search: random sampling of parameter values, from either
+input lists or a defined probability distribution
+-- Bayesian Optimization: makes use of Bayes Theorem to drive towards
+an optimal set of parameter values.
+
+XGBoost For Classification
+
+𝑓
+
+𝑓
+
+𝑟𝑓
+
+𝑟𝑓
+
+⋯
+
+𝑟𝑓 ,
+
+where 𝑓 is a tree model, r is the learning rate, a small constant
+
+0.5
+
+Feature X
+
+…
+
+2
+3
+
+Class Label
+1
+
+…
+
+1
+
+6
+
+0
+
+7
+
+0
+
+ xxx
+
+ xxx
+
+ We train an XGBoost classifier to:
+Predict the probability that a sample belongs to Class 1
+
+The first tree is one-node tree, output probability value 0.5 for every sample.
+0.5
+
+True prob (y)
+
+Pred. prob. (p)
+
+Negative Residual
+(p-y)
+
+1
+
+0.5
+
+-0.5
+
+1
+
+0.5
+
+-0.5
+
+6
+
+0
+
+0.5
+
+0.5
+
+7
+
+0
+
+0.5
+
+0.5
+
+Feature X
+
+…
+
+2
+3
+
+…
+
+We build the second tree using the negative residuals in the last column
+
+True prob (y)
+
+Pred. prob. (p)
+
+Negative Residual
+(p-y)
+
+1
+
+0.5
+
+-0.5
+
+1
+
+0.5
+
+-0.5
+
+6
+
+0
+
+0.5
+
+0.5
+
+7
+
+0
+
+0.5
+
+0.5
+
+Feature x
+
+…
+
+2
+3
+
+𝐺
+
+𝑝
+
+𝐻
+
+𝑝 1
+
+…
+
+𝑦
+
+𝑝
+𝑝
+
+𝑦
+
+𝑝 1
+
+(node score) =
+
+𝑝
+𝑝
+
+𝑦
+𝑝 1
+
+B= {sample with x>=5}
+
+𝑝
+
+𝑦
+
+0.5
+
+𝑝 1
+
+𝑝
+
+0.5
+
+0.5
+
+0.5
+
+0;
+
+1.
+
+0 (𝜆 is set to 1 here)
+
+Consider the split x<5 in Feature x.
+A = {samples with x<5}
+
+𝑝
+
+𝐺
+
+𝑝
+𝐻
+
+𝑦
+𝑝 1
+
+(node score)A =
+(node score)B =
+
+𝑝
+𝑝
+
+𝑦
+
+0.5
+
+𝑝 1
+.
+.
+
+𝑝
+
+0.5
+
+0.5
+
+1
+
+Gain after split is:
+
+X < 5?
+Yes
+
+Gain(X, 5)
+node score
+
+node score
+
+node score
+
+𝛾
+
+0 - 0 (𝛾 is set to 0)
+
+A:
+2 samples
+
+B:
+2 samples
+
+0.661
+
+0.331
+
+>0
+Positive gain leads to split
+IN this case, there are no further split.
+So, the output probability at each leaf is computed as:
+𝑤
+𝑤
+
+.
+
+.
+
+; 𝑝
+,
+
+0.661
+
+/
+
+𝑝
+
+/
+
+0.339
+
+ The tree building process is based on log odds, and therefore
+the sigmoid function is used to convert log odds score 𝑤 to probability 𝑝
+
+(Gs and Hs)
+
+Building Class Trees with Logistic Loss
+ Obtain the tree by splitting node-by-node until
+the node gain is <0 or tree height is big enough
+
+Feature x
+
+ At each node
+-- Assume there are k samples with neg. res. 𝑔
+-- Calculate the node score from residuals as
+
+3
+
+⋯
+
+Score
+
+, 𝐻
+
+∑
+
+2
+
+𝑦
+
+𝑦
+
+𝑦 1
+
+𝑦
+
+𝑖 ∈𝐼|𝑥
+
+𝑠 , Score
+
+Set B
+
+𝑖 ∈𝐼|𝑥
+
+𝑠 , Score
+
+Gain(j,s)
+
+Score
+
+Score
+
+∑∈
+
+, H
+
+∑∈ 𝑦 1
+
+𝑦
+
+∑∈
+
+, H
+
+∑∈ 𝑦 1
+
+𝑦
+
+Score
+
+…
+
+0.5
+
+7
+
+0.5
+
+-- Set 𝑗 ∗ and 𝑠 ∗ be the dimension and value that has the largest gain Gain(j*,s*)
+, 𝑤
+
+-0.5
+
+6
+
+𝛾
+
+-- If Gain(j*,s*) > 0, split.
+-- If Gain(j*,s*) < 0, not split. As a leaf, its value is 𝑝
+
+Neg. Res. (p-y)
+-0.5
+
+-- for each dimension j and value s
+Set 𝐴
+
+…
+
+⋯
+
+ Second-order optimization (uses Hessian)
+ Strong regularization
+ Efficient split finding
+ Parallelizable
+ Built-in pruning
+ Works well on tabular data
+
+

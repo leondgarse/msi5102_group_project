@@ -1,0 +1,917 @@
+MSI5201
+Essentials of Machine Learning
+Lecture 8 NNs and Deep Learning
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Supervised
+
+Regression
+Linear
+regression
+KNN
+Decision Tree
+Random Foress
+XGBoost
+
+Classification
+Linear square
+Logistic regression
+SVM
+KNN
+
+Decision Tree
+Random Foress
+XGBoost
+Neural Networks
+Deep Learning
+
+Traditional Methods
+
+Lecture Plan (AY 2025/2026)
+W1
+W2
+W3
+W4
+W5
+W6
+
+L1 (16 Jan)
+L2 (23 Jan)
+L3 (30 Jan)
+L4 ( 6 Feb)
+L5 (13 Feb)
+L6 (20 Feb)
+
+ML overview + Data Mapping + primer calculus for ML
+Linear regression models
+Decision trees, Random forest and XGBoost
+K-meaning and hierarchical clustering
+Advanced clustering methods (1st Quiz)
+Dimensionality reduction / visualization methods
+
+Reading Week
+W7 L7 ( 6 Mar)
+W8 L8 (13 Mar)
+W9 L9 (20 Mar)
+W10 L10 (27 Mar)
+W11
+W12 L11 (10 Apr)
+W13 L12 (17 Apr)
+
+(e-learning) Dimensionality reduction topics
+Neural Networks and Deep Learning
+CNNs and RNNs
+2nd quiz & Final Exam Review and Course Wrap-up
+(Holiday) No Lecture
+Project presentation
+Project presentation
+
+Perceptrons and Neural Networks
+
+Limitations of Linear Models
+▪ Linear model: For each 𝒙 = 𝑥1 , 𝑥2 , … , 𝑥𝑚 𝑖𝑛 𝑓𝑒𝑎𝑡𝑢𝑟𝑒 𝑠𝑝𝑎𝑐𝑒
+𝑓𝑾 𝒙 = 𝑏 + 𝑤1 𝑥1 + ⋯ + 𝑤𝑚 𝑥𝑚 .
+▪ Prediction may be negative
+▪ Price might not have a linear relation with features
+▪ To improve prediction, we truncate negative values to zero:
+ℎ𝑾 = max 𝑓𝑾 𝒙 , 0 = 𝑅𝑒𝐿𝑈 𝑓𝑾 𝒙
+
+Example: House sale price prediction
+▪ House transaction records:
+(size, #rooms, location (zip code), nearby school, nearby grocery store)
+▪ Linear model
+𝑓𝑾 𝒙 = 𝑏 + 𝑤1 𝑥1 + 𝑤2 𝑥2 +𝑤3 𝑥3 + 𝑤4 𝑥5 + 𝑤5 𝑥5
+▪ Improved non-linear model
+𝑦ො = ReLu (𝑓𝑾 𝒙 = ReLu ∘ 𝑓𝑾 (𝒙)
+
+1
+Size (𝑥1 )
+#rooms (𝑥2 )
+
+ReLu 𝑧 = max 𝑧, 0 = ቊ
+
+𝑏
+𝑤1
+𝑓𝑾
+
+Location(𝑥3 )
+
+School (𝑥4 )
+Store (𝑥5 )
+Input Vector
+
+𝑤5
+
+ReLu
+
+𝑦ො
+
+𝑧 𝑧≥0
+0 𝑧<0
+
+g(z) = ቊ
+
+1 𝑧≥0
+0 𝑧<0
+
+F Rosenblatt (1958) The Perceptron: A Probabilistic Model for Information Storage and Organization
+in the Brain
+
+Classification using Perceptron
+activation function
+
+1
+
+𝑏
+
+x1
+
+𝑤1
+
+x2
+
+𝑤2
+
+𝑓𝑾
+
+z
+
+g
+
+𝑦ො
+
+z= 𝑓𝑾 (x)
+0
+
+0
+1
+
+Training Data
+3 2 1 0 -1 -2
+
+g(z)= 𝑔(𝑓𝑾 (x) )
+
+Computation in a Neural Net
+Input
+
+Model:
+
+Prediction
+
+𝑧 = 𝑏 + 𝑤1 𝑥1 + 𝑤2 𝑥2 + ⋯ + 𝑤𝑚 𝑥𝑚
+= 𝑏 + σ𝑖 𝑤𝑖 𝑥𝑖
+𝑦ො = 𝜎(𝑧)
+
+𝑊
+
+𝑦ො
+
+𝜎(𝑧)
+𝑏
+
+Parameters of the model:
+𝑾 = (𝑏, 𝑤1 , … , 𝑤𝑚 )
+
+𝜎: a non-linear function
+
+Input
+
+Multi-value
+Prediction
+𝑤𝑖𝑗
+
+𝑧1
+
+For each j
+𝜎(𝑧1 )
+
+𝑧𝑗 = ෍ 𝑤𝑖𝑗 𝑥𝑖 + 𝑏𝑗 ,
+𝑖
+Equivalently,
+
+𝜎(𝑧𝑗 )
+
+𝑏𝑗
+
+𝑧𝑘
+𝑏𝑘
+
+Perceptron for K-class classification
+
+𝒛 = 𝑾𝐱 + 𝐛 (vector form)
+ෝ = 𝜎(𝒛)
+𝒚
+
+𝜎(𝑧𝑘 )
+
+(point-wise non-linearity)
+
+Remarks
+▪ The nonlinearity of the activation function 𝜎 is crucial
+-- Composition of any linear function is still linear
+-- Linear activation function does not increase model power.
+-- No-linear function does increase model power
+
+▪ Activation functions should be simple:
+-- Binary step (threshold) activation g(x)
+-- ReLu function
+-- Leaky ReLu function
+1 𝑧≥0
+Binary
+step
+activiation
+g(z)
+=
+ቊ
+-- Tanh
+0 𝑧<0
+-- Sigmoid/Softmax
+
+ReLu 𝑧 = max 𝑧, 0
+
+Leaky-ReLu: for 0 ≤ 𝛼 ≪ 1
+𝑧 𝑖𝑓 𝑧 ≥ 0
+𝐿𝑅 𝑧 = ቊ
+𝛼𝑧 𝑖𝑓 𝑧 < 0
+
+▪ ReLu is a special case of Leaky Relu when 𝛼 = 0.
+▪ Unbounded output
+-- on positive side with Relu
+-- on both sides with Leaky version
+𝛼 𝑖𝑓 𝑧 < 0
+𝜕𝐿𝑅(𝑧)
+▪ Efficient to implement:
+=
+ቊ
+𝜕𝑧
+1 𝑖𝑓 𝑧 ≥ 0
+▪ Also seems to help convergence
+(6x speed up vs tanh in the Alexnet paper)
+
+Tanh
+
+Sigmoid g(𝑧) =
+
+1
+1+𝑒 −𝑧
+
+▪ Interpretation as firing
+rate of neuron
+▪ Bounded between [0, 1]
+▪ Saturation for large +/▪ Gradients go to zero
+▪ Outputs centered at 0.5
+
+Training Perceptrons
+▪ Perceptron model is non-linear
+▪ Gradient descent is used
+▪ Assume a loss function 𝐽(𝜽) is used
+▪ Goal is to find the 𝜽 = 𝜃1 , 𝜃2 to minimize 𝐽(𝜽)
+▪ Idea:
+(0)
+0
+-- Start with one parameter 𝜽(0) = (𝜃1 , 𝜃2 )
+-- Repeat until no significant improvement:
+𝝏𝑱 𝜽
+ȁ𝜽=𝜽(𝑡)
+𝜽(𝑡+1) = 𝜽(𝑡) − η
+𝝏𝜽
+
+Learning rate
+
+𝐽(𝜽)
+
+Multiple-Layer Neural Networks
+
+▪ Proposed the backpropagation algorithm
+as a breakthrough, allowing multi-layer
+neural networks to be trained.
+▪ Among the functions that a multi-layer network
+can represent but a single-layer network cannot is
+the XOR function
+
+XOR problem
+x
+
+y
+
+label
+
+0
+
+0
+
+0(No)
+
+1
+
+0
+
+1(Yes)
+
+0
+
+1
+
+1
+
+1
+
+1
+
+0
+
+1986
+
+▪ A perceptron computes
+𝑓 𝑥, 𝑦 = 𝑔(𝜃1 𝑥1 + 𝜃2 𝑥2 + 𝑏)
+which creates only a linear-wise decision boundary.
+g(z) is the binary step activation.
+▪ XOR problem cannot be represented by a perceptron
+▪ But it can be represented by a two-layer neural network
+-- Compute
+ℎ1 = 𝑔 𝑥1 + 𝑥2
+
+3
+
+ℎ2 = 𝑔 𝑥1 + 𝑥2 − 2
+y = ℎ1 − ℎ2
+ℎ1
+
+𝑥1
+
+𝑔(ℎ1 )
+
++
+
+y
+𝑥2
+
++
+
+1
+
+ℎ2
+
+𝑔(ℎ2 )
+
+TWO-Layer CNNs
+Input
+
+Hidden features
+
+𝑾𝟏
+
+Prediction
+
+𝑾𝟐
+
+𝒉 = 𝜎(𝑾𝟏 𝐱 + 𝒃𝟏 )
+
+y= 𝜎(𝑾𝟐 𝒉 + 𝒃𝟐 )
+
+Example: House sale price prediction:
+• House Sale Data
+(size, #bedrooms, location, nearby school, nearby grocery store)
+• Introduce intermediate variables (features):
+
+-- max family size (ℎ1 ):
+related to size (𝑥1 ) and #bedrooms (𝑥2 )
+-- convenience index (ℎ2 ): related to location (𝑥3 ) and nearby school (𝑥4 )
+and grocery store (𝑥5 )
+-- house price (y): related to ℎ1 and ℎ2
+• Prediction is done in two phases:
+ℎ1 = ReLU 𝑏1 + 𝑤11 𝑥1 + 𝑤12 𝑥2
+ℎ2 = ReLU 𝑏2 + 𝑤23 𝑥3 + 𝑤24 𝑥4 + 𝑤25 𝑥5
+𝑦 = 𝑏3 + 𝜃1 ℎ1 + 𝜃2 ℎ2
+▪ Obtain 10-parameter non-linear model
+
+Size
+#bedroom
+s
+Location
+
+Max. family
+size
+ℎ1
+
+𝑦
+
+Park
+
+ℎ2
+
+Store
+
+Convenience
+index
+
+Two-Layer fully connected NN for house sale prediction
+If no prior knowledge is known
+-- fully connected model (i.e., increasing parameters)
+-- intermediate hidden variable
+→ form a hidden layer
+
+Size
+#bedroom
+s
+Location
+Park
+Store
+
+ℎ1
+𝑦1
+ℎ2
+
+Multi-Layer Fully Connected NN
+
+Overall, NN is a machine learning
+strategy that uses stacks of linear
+functions interleaved with with
+Pointwise-nonlinearities
+
+How many parameters in a Fully Connected NN?
+A fully NN may have multiple hidden layers
+and the j-th hidden layer has 𝑚𝑗 neurons
+-- 𝒉[𝑗] is a column vector of 𝑚𝑗 components.
+-- 𝜽 𝑗 is 𝑚𝑗 × 𝑚𝑗−1 matrix,
+-- 𝒃[𝑗] is a column vector of 𝑚𝑗 components
+
+𝒚
+𝒙
+
+𝒉[1]
+
+𝒉[2]
+
+𝒉[3]
+
+Power of Multiple NNs
+▪ One layer? Linear decision surface
+
+▪ Two or more layers?
+In theory, can represent any function. Assuming non-trivial non-linearity
+▪ But, issue is efficiency:
+-- very wide two layers vs narrow deep models
+-- In practice, more layers helps
+
+Why do deep nets generalize?
+▪ Deep nets have so many parameters that they could just act like look up tables,
+memorizing the training data
+▪ Instead, they learn rules that generalize
+▪ Defies classical theory!
+
+underfitting
+
+overfitting
+
+Choice
+Complexity of Model
+
+under-parameterized
+
+over-parameterized
+
+Complexity of Model
+Double Descent Phenomena
+
+Training Multi-Layer NNs: Loss function
+Network
+output
+
+…
+
+Ground truth
+label
+
+Softmax
+
+0.8
+
+Softmax converts raw scores
+into probabilities so that we can:
+• interpret model outputs
+probabilistically
+• apply cross-entropy loss
+for training
+
+Definition
+The softmax function takes a vector
+𝑧1 , 𝑧2 , … , 𝑧𝐾
+and maps it to a probabilistic distribution:
+𝑝1 , 𝑝2 , … , 𝑝𝐾
+by
+𝑒 𝑧𝑖
+𝑝𝑖 = 𝑧1 𝑧2
+𝑒 +𝑒 +⋯+𝑒 𝑧𝑘
+
+Simple Example
+Suppose a neural network outputs
+three scores for three classes:
+
+Softmax probabilities:
+
+Training Multi-Layer NNs: Loss function
+Network
+output
+
+…
+
+Ground truth
+label
+
+Cross-entropy loss function:
+෡ = − σ𝐾
+𝐻 𝒀, 𝒀
+ෝ𝑗
+𝑗=1 𝑦𝑗 log 𝑦
+= − log 𝑦ො𝑡𝑟𝑢𝑒
+Softmax
+
+which is negative log probability
+of the correct class.
+0.8
+Loss: - log 0.8
+
+Network
+output
+
+Ground truth
+label
+
+0.2
+
+0.6
+
+Loss: - log 0.2
+
+𝑓𝜃
+
+− log 𝑦ො𝑐𝑙𝑜𝑤𝑛 𝑓𝑖𝑠ℎ
+
+Training Multi-Layer NNs: Stochastic Gradient Descent (SGD)
+
+Backpropagation in Differential Neural Networks
+
+ഥ[1]
+𝜽
+𝜽𝟏
+𝒙(𝒊)
+
+𝑓1
+
+ഥ[3]
+𝜽
+𝜽𝟐
+𝒉[1]
+
+ഥ[3]
+𝜽
+𝜽𝟑
+𝑓2
+𝒉[2]
+
+𝑓3
+
+ഥ[4]
+𝜽
+𝜽𝟒
+
+𝒉[3]
+
+𝑓4
+
+𝑔4
+𝑔3
+𝑔1
+
+𝑔2
+
+Chain Rule in vector form
+∇𝑥 𝑧 = 𝐽𝑦 𝐱 𝑇 ∇𝑦 𝑧
+
+𝑦ො (𝑖)
+
+•
+•
+•
+•
+
+𝑔4 = 𝑓4
+𝑔3 = 𝑔4 ∘ 𝑓3
+𝑔2 = 𝑔3 ∘ 𝑓2
+𝑔1 = 𝑔2 ∘ 𝑓1
+
+Deep Learning
+
+Time
+
+Neural Network Research Milestones
+
+CNN
+RNN
+Self-Attention
+Transformers
+LLMs
+
+What is deep learning today?
+▪ Billion+ data point datasets
+▪ Parallel training on thousands of GPUs
+▪ Billion+ parameter NN architectures
+▪ Million+ dollar training costs
+▪ Shockingly good results
+▪ Open source community and modular reuse
+-- Autograd (pytorch, tensorflow)
+
+Assessment of AI Study (in Medicine)
+
+How to evaluate an AI study in medicine?
+Data
+Preparation
+
+Data
+Collection
+-- Is the data collection
+authorized?
+
+Model
+Selection
+-- What ML models are
+used?
+
+-- Is the data collected
+properly?
+-- Is the data of good
+quality?
+-- How is data
+preprocessed?
+
+Model
+Training
+
+Model
+Deployment
+-- Is there an appropriate
+clinical context?
+-- What are the limitations?
+-- Is the method ready for
+deployment?
+
+-- How is the data split?
+-- Are the metrics appropriate?
+-- Are the results explainable?
+-- Are the results reproducible
+and the model generalizable?
+
+CKD: Chronic kidney disease
+ESRD: End-stage renal disease
+
+How to evaluate an AI study?
+Data
+Collection
+
+Data
+Preparation
+
+-- Is the data collection approved?
+✓ A clinical relevant project has to be
+registered
+✓ Consent must be sought from patient
+before collection
+
+-- Is the data collected properly?
+✓ Are the data source clearly described?
+✓ Are the datasets representative
+(multi-center, diverse populations)?
+✓ Are inclusion/exclusion transparent?
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+• Institutional Review Board approval from FEMH
+(106159-E)
+• Informed consent was waived
+• 671 patients who underwent coronary artery
+bypass (CABG), valve replacement surgery, or both
+• Far Eastern Memorial Hospital (FEMH),
+New Taipei City, from 8/2016 to 8/2018
+• AKI defined using KDIGO, a widely accepted
+standard.
+
+Data
+Collection
+
+Data
+Preparation
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- Is the data of good quality?
+✓ Are there missing data entries?
+✓ Were labels validated (by experts, established criteria)?
+-- Is the data preprocessed?
+✓ Is missing data handled appropriately?
+✓ how data is preprocessed (e.g., normalization, augmentation)?
+• Overall missing rate is 0.16%
+• “All data except for the time-series features were collected through manual review of the
+medical records”
+• “Time-series data were obtained from electronic records kept at the database”
+• “The missing data were replaced with the average values or modes for the variables”
+• PCA was used to reduce the dimensionality from 179 to 10 for the real variability data
+
+Data
+Collection
+
+Data
+Preparation
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- What ML models (Deeping Learning, RL, Regression and Decision trees) are used?
+
+•
+•
+•
+•
+•
+
+Logistic regression,
+Simple decision tree, random forest (RF)
+Support vector machine (SVM),
+eXtreme Gradient Boosting (XGboost)
+Ensemble (RF + Xgboost)
+
+Data
+Collection
+
+Data
+Preparation
+
+• Validation sets are used for testing
+during training
+• Test sets are used to test the model
+after training is complete. Test set
+is important for DL
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- How is the data split?
+-- Are the metrics appropriate?
+-- Are the results explainable?
+-- Are the results reproducible/generalizable?
+
+• Training data (70%); validation data (30%); test data (0%);
+• Imbalanced case was handled using oversampling positive cases.
+• AUC-ROC was selected among
+{Precision, Recall, Accuracy, F1-Score, AUC-ROC}
+for accuracy
+
+Figure 2
+
+Data
+Collection
+
+Data
+Preparation
+
+Shapley Additive Explanation (SHAP)
+Identify the importance of a feature
+by examining how performance drops
+when the feature is removed.
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- How is the data split?
+-- Are the metrics appropriate?
+-- Are the results explainable?
+-- Are the results reproducible/generalizable?
+
+• Explainability with SHAP values of features
+
+Figure 4 in the paper
+
+Data
+Collection
+
+Data
+Preparation
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- How is the data split?
+-- Are the metrics appropriate?
+-- Are the results explainable?
+-- Are the results reproducible/generalizable?
+• Reproducible?
+-- Decision tree model is given in Fig.3.
+-- Others are not fully specified.
+Hyperparameter tuning is not
+fully described
+-- No information on the availability of
+the code and data
+• Generalizable?
+-- Data is from a single source
+
+Data
+Collection
+
+Data
+Preparation
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- Is there an appropriate clinical context?
+-- What are the limitations?
+-- Is the method ready for deployment?
+• Addresses an important problem: CSA acute kidney injury, linked to
+high morbidity (22%) and mortality (6.6%=22%x30%)
+• Uses perioperative data.
+• Outcomes: reduce mortality; reduce costs.
+
+Data
+Collection
+
+Data
+Preparation
+
+Model
+Selection
+
+Model
+Training
+
+Model
+Deployment
+
+-- Is there an appropriate clinical context?
+-- What are the limitations?
+-- Is the method ready for deployment?
+• Authors declare some limitations
+-- Single centre, limited and imbalanced data
+-- Manual input of large amount of data
+-- May not compared with other methods (e.g. CNN)
+• A solid proof-of-concept AI study using past data,
+demonstrating feasibility and clinical relevance
+• But not yet ready for clinical deployment
+
+Extra Reading
+https://www.youtube.com/watch?v=OMoJ0f5WZxo&list=PL6d0EQCkz8skZ7
+dJhpU9aP93xuSQiVIze&index=18
+Code for building a model from the pretrained CNN121 model
+for detecting Covid-19 -caused Penumonia
+
+Fahsbender et al. Benchmarking and Evaluation of AI Models in Biology:
+Outcomes and Recommendations from the CZI Virtual Cells Workshop.
+arXiv preprint arXiv:2507.10502. 2025 Jul 14.
+
+

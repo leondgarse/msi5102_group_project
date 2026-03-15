@@ -1,0 +1,647 @@
+MSI5102
+Essentials of Machine Learning
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Course Information
+
+•
+
+Course Staff
+Lecturer: Prof. Zhang Louxin (matzlx@nus.edu.sg, Tel: 6516-6579)
+
+•
+
+Contact Hours
+-- Lecture class:
+
+19:00–22:00, Fri, UT-AUD3
+
+-- Final exam (with help sheet): 13:00–15:30, 05-May-2026
+-- Additional consultations can be arranged by email
+•
+
+Course Format and Assessment
+-- Group project (30%)
+-- Class quizzes (30%), with announced one week in advance
+-- Final exam (closed) (40%)
+
+▪ Details of the Quizzes
+•
+
+Demonstrate mastery of the course material.
+
+•
+
+Question Types
+-- Knowledge questions: multiple choice, fill-in-the-blank
+-- Deeper understanding questions: short answers
+
+▪ Rubric for group capstone project
+•
+
+Each group has 4 to 6 students
+
+•
+
+The project is based on a published AI work and is divided into three components:
+-- Model reproduction – 15 marks, and
+-- Improving the model or extended comparative analysis – 7 marks
+-- oral presentation using ppt – 8 marks
+
+• A list of works for project will be announced in Week 6.
+• If you plan to do a different project, please discuss it with the lecturer in advance
+
+Lecture Plan (AY 2025/2026)
+W1
+W2
+W3
+W4
+W5
+W6
+
+L1 (16 Jan)
+L2 (23 Jan)
+L3 (30 Jan)
+L4 ( 6 Feb)
+L5 (13 Feb)
+L6 (20 Feb)
+
+ML overview + Data Mapping + primer calculus for ML
+Linear regression models
+Decision trees, Random forest and XGBoost
+K-meaning and hierarchical clustering
+Advanced clustering methods (1st Quiz)
+Dimensionality reduction / visualization methods
+
+Reading Week
+W7 L7 ( 6 Mar)
+W8 L8 (13 Mar)
+W9 L9 (20 Mar)
+W10 L10 (27 Mar)
+W11
+W12 L11 (10 Apr)
+W13 L12 (17 Apr)
+
+(e-learning) Neural networks, Convolutional Neural Networks
+Recurrent NNs
+(Eve of Hari Raya Puasa. lecture or not depending on progress) Transforms
+Applications in medical imaging, 2nd quiz
+No Lecture
+Project presentation
+Project presentation
+
+Programming Platform
+• Python
+• Google Colab (https://colab.research.google.com )
+-- Built on Jupyter Notebook technology
+-- Runs entirely in the cloud
+-- Tutorial: https://www.youtube.com/watch?v=RLYoEyIHL6A
+•
+
+GitHub
+-- a platform for hosting, sharing, and
+collaborating on code projects
+
+Why Machine Learning?
+
+What is Artificial Intelligence (AI)?
+
+Easy for machines
+
+Hard for machines
+
+-- “AI is the science and engineering of making intelligent machines,
+especially intelligent computer programs.”
+General
+intelligence
+Driving car
+Image
+Face
+Language
+Knowledge
+Planning
+Reasoning
+Calculus
+Chess
+Go
+
+Easy for humans
+
+Hard for human
+
+Artificial Intelligence (AI) vs Machine Learning (ML)
+-- AI has many approaches
+-- ML is a dominant approach.
+-- ML solves an AI problem through mathematical modelling
+
+ML
+
+AI
+
+DP
+
+DS
+
+ML solves an AI task via math. modelling
+
+• Classification (supervised learning) task
+-- Have labels for some objects
+-- Learn a rule that will accurately predict
+the label of a new, unseen object
+
+Gene X expression
+
+Clustering (unsupervised learning) task
+-- No labels
+-- Group objects into clusters based on how close
+they are to each other
+-- Extract “knowledge” from data
+-- Widely used in data science
+
+Feature Y
+
+•
+
+F(x) =0
+
+Gene Y expression
+
+• Objects: characterized by features (i.e. properties)
+
+Feature X
+
+Classification Methods
+• Linear regression
+• Logistic regression
+
+Linear models
+
+• Supporting vector machines
+• k-nearest neighbors (k-NN)
+• Decision trees
+• Random forest
+• Gradient boosting machines (GBM, XGBoost, LightGBM)
+• Naïve Bayes
+• Single-layer neural networks
+• Multiple-layer neural networks (i.e., deep learning)
+
+Tree-based
+methods
+
+Classical
+methods
+
+Traditional Machine Learning
+
+Input
+
+HandAssigned
+Feature
+Space
+
+(Option)
+AbstractFeature
+Space
+
+Output
+
+Deep Machine Learning
+
+Input
+
+HandAssigned
+Feature
+Space
+
+AbstractFeature
+Space
+
+…
+
+AbstractFeature
+Space
+
+Output
+
+Multi-Layers Feature Extraction
+▪ (Property 1) Deep learning automatically extracts informative features from data
+▪ (Property 2) DL transforms classification tasks into numerical computations
+
+▪ Deep learning automatically extracts informative features from data
+▪ DL transforms classification tasks into numerical computations
+
+Visible layer
+(pixels)
+
+1st hidden
+layer
+(edges)
+
+2nd hidden
+layer
+(corners &
+contours)
+
+3rd hidden
+layer
+(object
+parts)
+
+Output
+(object
+identity)
+
+How the brain works inspired artificial neural networks
+
+•
+
+Neurons connected into circuits (neural
+networks): emergent properties, learning,
+memory
+• Large number of simple primitives
+arranged in simple, repetitive style
+
+Clustering (Unsupervised Learning) Methods
+▪ Partition-based Methods
+-- K-means
+-- Fuzzy K-means
+-- K-medoids
+▪ Hierarchical Clustering
+-- Agglomerative
+▪ Density-based Methods
+-- DBSCAN
+▪ Model-based Methods
+-- Gaussian Mixture Models
+
+Feature Engineering for Modeling
+
+Medical diagnosis: predict if a patient has cancer based on
+eight symptoms.
+▪ Data: a number of health records:
+-- 8 Boolean values → presence/absence of symptoms
+-- 1 Boolean value → cancer diagnosis (yes/no)
+▪ Machine learning algorithm takes these data to output a function f
+(called predictor or classifier)
+▪ The predictor f takes 8 symptom Boolean values as input,
+outputs a Boolean prediction: cancer or not.
+Digit recognition. predict which digit in an image.
+▪ Data:
+6000 8-bit black/white images of handwritten digit, 28x28 pixel.
+▪ ML algorithm takes these data to output a neural network N
+▪ The predictor N takes a digit as input, and guesses the digit (0 to 9).
+LeCun Y et al. Neural computation. 1989 Dec;1(4):541-51.
+
+Yann Le Cun
+
+Question: How to covert learning problems into
+algorithmic problems where mathematics can be
+used?
+
+Supervised Learning Problem
+1
+
+1
+
+2
+
+2
+
+𝑘
+
+𝑘
+
+Input: k data points 𝑥 , 𝑦
+, 𝑥 ,𝑦
+,…, 𝑥 ,𝑦
+,
+where 𝑥 𝑖 ∈ 𝑿𝑚 (feature space), 𝑢 𝑖 ∈ 𝒀𝑛 (label space).
+Solution: a predicting function from a function class
+𝑓 𝒙, 𝜽 : 𝑿𝑚 → 𝒀𝑛 ,
+where 𝜽 is called the parameter vector
+
+F(x) =0
+
+Supervised learning
+Regression
+Multivariate regression
+Binary classification
+Multiclass classification
+
+𝒀𝒏 ≠ ∅
+𝒀𝑛 =R (real space), n=1
+𝒀𝑛 =𝑹𝑛 (n-dim real space), n>1
+Y = {0, 1}, n=1
+Y = {0, 1, .., k}, n=1
+
+Unsupervised learning
+
+𝒀=∅
+
+-- Difficulty lies in the non-numeric features
+-- Solution: Map text and images to a point in a high-dimensional numerical
+feature space and then learn a model
+Medical diagnosis: predict if a patient has cancer based on
+eight symptoms.
+▪ Data: a number of health records:
+-- 8 symptoms
+-- 1 Boolean value → cancer diagnosis (yes/no)
+
+Feature Engineering
+Raw Data
+𝑢 ∈ 𝑋, 𝑣 ∈ 𝑌
+𝑋
+𝑌
+
+Example A record for house sale might consist of the following fields:
+(address, photo, house or apt?, size, #(bedrooms))
+
+Data Types
+•
+
+Each data sample have some fields, i.e. 𝑥 = (𝑥1 , 𝑥2 , … , 𝑥𝑚 )
+
+•
+
+Each field 𝑥𝑖 has a type, such as:
+-- real number
+-- categorical (ordinal, nominal), including Boolean
+-- text
+-- image
+-- audio
+-- graphs or other objects
+
+Example A record for house sale might consist of the following fields:
+(address, photo, house or apt?, size, #(bedrooms))
+
+Instruction:
+three a day
+Instruction:
+one a day
+
+Feature Mapping
+• To learn a predictor, the data records 𝑥, 𝑦 must be mapped to real vectors
+• Feature mappings usually work on each component separately:
+𝑥 = 𝑥1 , 𝑥2 , … , 𝑥𝑛 → (𝜙1 𝑥1 , 𝜙2 𝑥2 , …, 𝜙𝑛 𝑥𝑛 ) ∈ ℝ𝑠
+𝑦 = 𝑦1 , 𝑦2 , … , 𝑦𝑚 → (𝜓1 𝑦1 , 𝜓2 𝑦2 , …, 𝜓𝑚 𝑦𝑚 ) ∈ ℝ𝑡
+where 𝜙𝑖 (𝜓𝑗 ) maps a component to a real vector
+
+•
+
+Feature mapping has two purposes:
+-- Convert the learning process into numerical computing
+-- Put the different data types on an equal footing, i.e., real vectors
+Example 1) Each real (or integer) number maps to itself.
+2) For a Boolean field, 𝜙 FALSE = −1; 𝜙 TRUE = 1.
+3) Color maps to a 3-dimenationl vector (R, G, B).
+-- Red maps to (255, 0, 0)
+-- Dark red maps to (192, 0, 0)
+
+Faithful Embeddings
+
+Mapping Categorical Data
+•
+
+These categories may be nominal (no natural order, e.g., blood type, colors)
+or ordinal (with an inherent order, e.g., education level, hotel ranking)
+
+•
+
+For nominal categorical C = {element1, element2, …, element-k}
+-- One-hot embedding h maps the j-th element to the j-th vector of standard basis
+of 𝑅𝑘 (k-dim. real vector space).
+Example h(apple) = (1, 0, 0), h(orange) = (0, 1, 0), h(banana) = (0, 0, 1)
+-- Reduced one-hot embedding 𝜙 maps the j-th element to the j-th vector of
+the standard basis of 𝑅𝑘−1 for j<k and maps k-th to the zero vector of 𝑅𝑘−1 .
+Example h(apple) = (1, 0), h(orange) = (0, 1), h(banana) = (0, 0)
+
+•
+
+O = {𝑎1 , 𝑎2 , … , 𝑎𝑘 } (ordinal data)
+
+•
+
+Example Hotel ranks = {⋆, ⋆⋆, ⋆⋆⋆, ⋆⋆⋆⋆, ⋆⋆⋆⋆⋆}
+Likert scale = {strongly disagree, disagree, neutral, agree, strongly agree}
+
+• Can map the k elements into k consecutive integers.
+-- map(likert scale) = {-2, -1, 0. 1. 2},
+-- map(hotel ranks) ={1, 2, 3, 4, 5}.
+
+Word2vec
+Word2vec maps words into 300-dim. real vectors.
+•
+
+Developed from a dataset from Google News containing 100 billion words.
+
+•
+
+Captures semantic meaning: words with similar contexts have similar vectors
+
+•
+
+Applications including
+-- Text classification
+-- Machine translation
+-- Information retrieval
+
+VGG16
+VGG16 is an image embedding method.
+•
+
+Developed using deep learning.
+
+•
+
+Maps images (224x224 pixels with RGB components) to a 4096-dimensional real vector
+
+•
+
+Applications including
+-- (Deep learning-based) Image classification
+-- Object detection
+-- Feature extraction for health records and other data
+𝜙(𝐴) 𝜙(𝐵) 𝜙(𝐶)
+𝜙(𝐴) 0
+𝜙(𝐵)
+
+Image A
+
+Image B
+
+Image C
+
+107
+0
+
+103
+87
+0
+
+Pairwise distances between their
+representation vector under VGG16
+
+Standardized Embeddings
+•
+
+we usually require that an embedding is standardized
+-- Entries of ϕ(u) are centered around 0
+-- Entries of ϕ(u) range over [-1, 1]
+
+•
+
+With standardized embeddings, entries of feature map
+are all comparable, i.e., centered around zero, standard deviation around one
+
+Standardization Process
+
+Remark:
+1. This process ensures
+that each numeric
+feature is centred at 0
+with standard deviation 1.
+2. Standardized features
+are easy to interpret:
+𝑥 = 1.3 means:
+𝑥 is 1.3 SD
+above the mean value 0.
+
+Log Transform Process
+
+▪ Old school rule-of-thumb: if field u is positive and ranges over a wide scale,
+we apply
+ϕ(u)=log u, or log (1+u) (if u is sometimes zero),
+and then standardize
+
+▪ Examples: web site visits, ad views, company capitalization
+
+▪ Log embedding is faithful:
+20 and 22 are similar, as are 1000 and 1100
+but 20 and 120 are not similar
+i.e., we care about fractional or relative differences between raw values
+
+Example: House price prediction
+▪ We want to predict house selling price 𝑣 from record (𝑢1 , 𝑢2 )
+
+▪ We care about relative error in price 𝑣 , we process it as:
+and then standardize
+▪ We standardize fields ​ 𝑢1 as
+
+▪ Then, predict 𝑦 = log 𝑣 from standardized area and #bedrooms
+
+Feature Engineering
+▪ Basic Idea
+-- start with some features
+-- then process or transform them to produce new (engineered) features
+-- use these new features in your predictor
+▪ Was it a good idea? did it improve your predictor?
+-- train your model with original features and validate performance
+-- train your model with new features and validate performance
+-- if performance with new features is better, your feature engineering was successful
+
+Remaining Issues
+-- How to choose performance metrics to validate
+a classifier?
+-- How to choose and tune a model?
+-- How to overcome overfitting and underfitting
+using regularization?
+
+Essential Calculus for ML
+
+Why Calculus Matters in Machine Learning
+Key idea: Learning = Optimization
+▪ Most ML models are trained by minimizing a loss function
+▪ Calculus provides tools to:
+• Find the maximum or minimum of a function
+• Find directions of steepest descent
+▪ Core uses in ML:
+• Model training (gradient descent) for regression models
+• Backpropagation for neural networks
+• Sensitivity and stability analysis
+
+Basic Functions
+
+𝑓 𝑥, 𝑦
+
+▪ Linear function
+-- 𝑓 𝑥 = 3𝑥 + 5
+-- 𝑓 𝑥, 𝑦 = 3𝑥 + 5𝑦 + 1
+▪ Polynomial functions
+-- 𝑞 𝑥 = 2𝑥 2 − 5𝑥 + 1
+-- p 𝑥 = 3𝑥 3 + 5𝑥 + 2
+-- p 𝑥, 𝑦 = 3𝑥 2 + 5𝑦 2 + 2𝑥𝑦 + 𝑥 + 𝑦 + 1
+
+p 𝑥, 𝑦
+
+▪ Exponential function
+-- 𝑓 𝑥 =
+
+1
+− 𝑥−𝜇 2 /(2𝜎 2 )
+𝑒
+,
+2𝜋𝜎
+
+▪
+
+Piecewise Linear function
+-- 𝑓 𝑥 = |𝑥|
+−3𝑥 + 2, 𝑖𝑓 𝑥 < −2
+-- 𝑔 𝑥 = ൞ −4𝑥, 𝑖𝑓 − 2 ≤ 𝑥 ≤ 0
+5𝑥, 𝑖𝑓 𝑥 > 0
+
+𝑓(𝑥)
+
+▪
+
+Composition functions
+-- A composite function is a function formed by applying one function
+to the result of another
+-- Example: z = 𝑓 𝑦 = sin 𝑦, 𝑦 = 𝑔 𝑥 = 𝑥 3 ,
+𝑧 = 𝑠𝑖𝑛 𝑥 3 is the composite function of f and g, written 𝑓 ∘ 𝑔
+− Example: 𝑦 = | sin 𝑥|
+
+Derivatives and Gradients
+▪ Derivative (for 1-variable function)
+𝑑𝑓
+-𝑑𝑥
+-- Measures rate of change
+▪ Gradient (Multivariate)
+-- For 𝑓 𝑥1 , 𝑥2 , … , 𝑥𝑛 ,
+-- Negative gradient → steepest decrease
+▪ At a local maximum or local minimum,
+the gradient of a differentiable function is
+the zero vector
+
+𝑞 𝑥 = 2𝑥 2 − 5𝑥 + 1
+
+To find the min of q(x), we compute
+𝑞 ′ 𝑥 = 4𝑥 − 5.
+Setting 𝑞 ′ 𝑥 =0, we get
+the minimum point 𝑥 = 1.25
+
+Sum rule and Product Rule
+
+For ℎ 𝑥 = 𝑓 𝑥 + 𝑔 𝑥 ,
+
+𝑑ℎ(𝑥) 𝑑𝑓(𝑥) 𝑑𝑔(𝑥)
+=
++
+𝑑𝑥
+𝑑𝑥
+𝑑𝑥
+
+Chain Rule
+
+2𝑥𝑦 ⋅ 1 + 𝑥 2 ⋅ 1 = 2𝑥𝑦 + 𝑥 2
+=2 𝑠+𝑡 𝑠−𝑡 + 𝑠+𝑡 2
+𝜕𝑧 𝜕𝑧 𝜕𝑥 𝜕𝑧 𝜕𝑦
+=
++
+= 2𝑥𝑦 ⋅ 1 + 𝑥 2 ⋅ −1 = 2𝑥𝑦 − 𝑥 2
+𝜕𝑡 𝜕𝑥 𝜕𝑡 𝜕𝑦 𝜕𝑡
+=2 s+t s−t − s+t 2
+
+

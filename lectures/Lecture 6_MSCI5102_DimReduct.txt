@@ -1,0 +1,952 @@
+Recap: Unsupervised Learning
+▪ Unsupervised learning is a machine learning technique
+that deals with unlabeled data
+▪ The goal is
+-- to discover the underlying patterns
+-- find groups of similar samples
+in a unlabeled dataset.
+▪ The popular types of unsupervised learning algorithms are:
+-- Clustering techniques
+• K-Means
+• Hierarchical
+• DBSCAN
+-- Dimension Reduction
+• Principal Component Analysis (PCA)
+• tSNE
+• uMap
+
+DBSCAN
+
+Density-Based Spatial Clustering of Appl. with Noise (DBSCAN)
+▪ Idea
+-- Clusters are defined as dense regions of points,
+separated by low-density regions
+-- Can detect arbitrarily shaped clusters and noise (outliers)
+▪ Two hyperparameters
+-- ε (epsilon): radius of neighborhood.
+• point A is a ε-neighbor of B if 𝑑 𝐴, 𝐵 ≤ 𝜖
+-- M: minimum number of points required
+to form a dense region
+
+M=5
+
+ε
+
+▪ Types of data points
+-- Core point: a point with at least M ε-neighbors.
+-- Border point:
+A point that is not a core point but is within distance
+ε of a core point.
+-- Outlier: A point that is not within distance ε of any core point.
+
+outlier
+Core points
+
+Border point
+
+DBSCAN Algorithm
+Given hyperparameters M and ε
+Step 1: Build ε-neighbor graph.
+Connect two points if the distance between them is less than 𝜖
+𝜖 = 1.45
+M=3
+
+DBSCAN Algorithm
+Given hyperparameters M and ε
+Step 1: Build ε-neighbor graph using ε-ball
+Step 2: Identify core, boundary and outlier points
+𝜖 = 1.45
+M=3
+
+DBSCAN Algorithm
+Given hyperparameters M and ε
+Step 1: Build ε-neighbor graph using ε-ball
+Step 2: Identify core, boundary and outlier points
+Step 3: Form clusters
+▪ Connected core points form a cluster
+
+Two core points are connected if they are connected
+via a path consisting of only core points.
+
+𝜖 = 1.45
+M=3
+
+DBSCAN Algorithm
+Given hyperparameters M and ε
+Step 1: Build ε-neighbor graph using ε-ball
+Step 2: Identify core, boundary and outlier points
+Step 3: Form clusters
+▪ Connected core points form a cluster
+▪ Each boundary point is assigned to
+only one cluster if that cluster contains
+at least one ε-neighbor of that point.
+
+Two core points are connected if they are connected
+via a path consisting of only core points.
+
+𝜖 = 1.45
+M=3
+
+Summary
+Clusters grow through connected dense regions, while
+isolated points remain noise.
+▪ Pros
+• No need to specify number of clusters
+• Handles arbitrary cluster shapes
+• Identifies outliers automatically
+
+https://www.naftaliharris.com/blog/visualizing-dbscan-clustering/
+https://www.naftaliharris.com/blog/visualizing-k-means-clustering/
+
+▪ Cons
+• Sensitive to hyperparameters ε and M
+
+M=4
+
+M=5
+
+PCA
+
+Motivations
+▪ Humans are highly optimized for visual pattern recognition
+-- Communicate findings clearly
+▪ Patterns that are hard to detect numerically may be obvious visually
+-- Identify clusters or group separation
+-- Detect outliers or anomalies
+-- Reveal non-linear patterns
+
+4 datasets with same statistics have different visual pattern (Source: a book of Tufte)
+
+▪ 2D plots are:
+-- Easy to interpret
+-- Easy to present
+-- Easy to explain to non-experts
+▪ 3D plot with difficulty
+▪ Beyond 3D is impossible to visualize directly
+
+▪ Dimensionality Reduction is important for visualization
+
+High-dimensional data
+
+PCA
+t-SNE
+u-MAP
+
+2D embedding
+
+Visual inspection
+
+▪ Dimensionality Reduction is also needed for classification
+-- In high dimensions, data becomes sparse, distance
+measures become less meaningful
+-- Reduction improves generalization of learning models
+▪ PCA compresses correlated features into a smaller set of new features
+called principal components
+▪ It uses linear functions to map the original features into
+a smaller number of components that retain most of information
+(variance in stat.) in a dataset.
+
+How to find the most informative latent features using linear functions?
+
+Revenue
+Growth (x1)
+
+Profit
+Margin(x2)
+
+Return on
+Equity (x3)
+
+Debt/
+Equity (x4)
+
+New
+feature (y)
+
+12
+
+15
+
+18
+
+0.40
+
+62
+
+10
+
+14
+
+16
+
+0.50
+
+14
+
+18
+
+20
+
+0.35
+
+6
+
+8
+
+9
+
+1.20
+
+7
+
+9
+
+10
+
+1.00
+
+40
+
+5
+
+7
+
+8
+
+1.30
+
+33.5
+
+Linear map to obtain
+a new feature
+
+57.5
+71.75
+
+𝑦 = 𝑥1 + 2𝑥2 + 𝑥3 + 5𝑥4
+
+37
+
+Statistics Setup:
+
+Dataset becomes a matrix and linear mapping becomes multiplication matrix and vector
+Revenue
+Growth (x1)
+
+Profit
+Margin(x2)
+
+Return on
+Equity (x3)
+
+Debt/
+Equity (x4)
+
+12
+
+15
+
+18
+
+0.40
+
+10
+
+14
+
+16
+
+0.50
+
+14
+
+18
+
+20
+
+0.35
+
+6
+
+8
+
+9
+
+1.20
+
+7
+
+9
+
+10
+
+1.00
+
+𝐿𝑖𝑛𝑒𝑎𝑟 𝑚𝑎𝑝𝑝𝑖𝑛𝑔
+𝑦 = 𝑥1 +2𝑥2 + 𝑥3 + 5𝑥4
+
+12
+
+15
+
+18
+
+0.40
+
+10
+
+14
+
+16
+
+0.50
+
+14
+
+18
+
+20
+
+0.35
+
+6
+
+8
+
+9
+
+1.20
+
+7
+
+9
+
+10
+
+1.00
+
+12
+
+15
+
+18
+
+0.40
+
+10
+
+14
+
+16
+
+0.50
+
+14
+
+18
+
+20
+
+0.35
+
+6
+
+8
+
+9
+
+1.20
+
+7
+
+9
+
+10
+
+1.00
+
+62
+1
+57.5
+2 =
+71.75
+1
+37
+5
+40
+
+Consider 5 samples with 2 numeric features
+
+2
+3
+4
+5
+6
+
+1
+2
+3
+4
+5
+
+2𝑎 + 𝑏
+3𝑎 + 2𝑏
+𝑎
+= 4𝑎 + 3𝑏
+𝑏
+5𝑎 + 4𝑏
+6𝑎 + 5𝑏
+
+Which (a, b) maximizes
+The variance of the projections
+𝑃1′ , 𝑃2′ , … , 𝑃5′ ?
+
+Projects on x-axis
+
+a=3/5, b=4/5
+
+a=0, b=1
+
+Consider 5 samples with 2 numeric features
+2
+3
+4
+5
+6
+
+1
+2
+3
+4
+5
+
+2𝑎 + 𝑏
+3𝑎 + 2𝑏
+𝑎
+= 4𝑎 + 3𝑏
+𝑏
+5𝑎 + 4𝑏
+6𝑎 + 5𝑏
+
+Which (a, b) maximizes
+The variance of the projections
+𝑃1′ , 𝑃2′ , … , 𝑃5′ ?
+Solution can be found from
+the data matrix using
+matrix operations
+
+Projects on x-axis
+
+a=3/5, b=4/5
+
+Eigenvalues and Eigenvectors
+2
+4
+
+𝑡
+3 𝑥
+=
+𝑦
+𝑠
+1
+
+𝐴𝑛𝑚 𝑣 = 𝑢
+
+A=
+
+(2, -7)
+
+https://www.geogebra.org/m/KuMAuEnd
+
+A=
+(2, 2)
+
+Let A be a square matrix such that
+
+𝐴𝒗 = 𝜆𝒗
+Then,
+-- 𝒗 is called an eigenvector of A
+-- 𝜆 is the corresponding eigenvalue.
+
+▪ Not every square matrix has eigenvectors
+▪ Symmetric matrix always have
+a number of linearly independent
+eigenvectors
+
+https://www.geogebra.org/m/KuMAuEnd
+
+Principle Component Analysis
+▪ The eigenvectors of the covariance matrix of a dataset are the
+principle components (PCs) in PCA.
+▪ The principal components are ordered by decreasing eigenvalues,
+called the first, second … etc.
+They are the directions of the new feature spaces.
+▪ Each eigenvalue represents the amount of variance explained
+by its corresponding component. The first PC maximizes the
+variance of data among all directions.
+Revenue
+Growth (x1)
+
+Profit
+Margin(x2)
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+x1
+
+Revenue
+Growth (x1)
+
+Profit
+Margin(x2)
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+PC2
+
+In summary,
+▪ Principal components are vectors that define a new
+coordinate system in which the first axis goes in the direction
+of the highest variance in the data
+▪ The second axis is orthogonal to the first one and goes in the
+direction of the second highest variance in the data.
+
+x1
+
+PC1
+
+▪ Principal components analysis (PCA) is used to summarize
+or transform highly correlated features of data into a few main,
+uncorrelated components.
+▪ The PCA algorithm orders the eigenvectors from highest to lowest
+according to their usefulness in explaining the total variance in
+the initial data (i.e., eigenvalues).
+
+PCA of Gene expression data with over a few thousand of gene features
+
+PCA Algorithm
+Input: A data matrix M (t samples, n features)
+1. Centre M by subtracting the mean for each feature.
+2. Compute the covariance matrix  of M.
+3. Compute the first few (say k) unitary eigenvectors of :
+PC1: 𝑎1 , 𝑎2 , … , 𝑎𝑛 ,
+PC2: 𝑏1 , 𝑏2 , … , 𝑏𝑛 ,
+…
+4. Map the data M into k-dimensional space by mapping
+an original sample (a row in M) to its linear combinations:
+
+𝑚1 , 𝑚2 , … , 𝑚𝑛
+
+→ σ1≤𝑗≤𝑛 𝑚𝑗 𝑎𝑗 , σ1≤𝑗≤𝑛 𝑚𝑗 𝑏𝑗 , …
+
+# 1. Center the data
+# 2. Compute covariance matrix
+
+# 3. Compute eigenvalues and eigenvectors
+# 4. Sort eigenvectors by descending eigenvalues
+
+# 5. Select top k eigenvectors
+# 6. map the date to k-dim PC space
+
+• Using PCA with Decision Tree-based methods
+
+processing
+
+its covariance matrix.
+
+t-Stochastic Neighbor Embedding (tSNE)
+
+t-SNE
+▪ A nonlinear method for data visualization,
+developed by Laurens van der Maaten and Geoffrey Hinton.
+▪ Widely used to visualize high-dimensional data
+to explore
+-- patterns
+-- clusters
+-- nonlinear relationships
+Examples:
+-- image
+-- gene expression data
+-- word embeddings
+
+• Contains 70,000 grayscale images of handwritten digits (0–9)
+• Each image has size 28 × 28 (=784) pixels
+https://en.wikipedia.org/wiki/MNIST_database?utm_source=chatgpt.com
+
+tSNE result
+
+PCA result
+
+tSNE with visualizing gene expression data
+Samples
+
+▪ Bulk sequencing can lead to misleading views
+
+Single cells (400)
+
+tSNE with Word Embedding
+
+tSNE plot
+
+Key Idea of t-SNE
+▪ t-SNE attempts to preserve local similarity between
+data points.
+▪ Similarity is measured using a distance metric.
+▪ In the low-dimensional visualization:
+-- similar points are placed close together,
+-- dissimilar points are pushed farther apart
+
+Pairwise distances in feature space
+
+Pairwise distance in the embedding space
+
+tSNE Algorithm
+1. (Compute pairwise similarities in the original space)
+For any ordered pair of points 𝒙𝒊 and 𝒙𝑗 ,
+-- Computes the distance 𝑑(𝑖, 𝑗) between the two points
+-- Compute a conditional probability using Gaussian distribution
+𝑝𝑗|𝑖 =
+
+Points in high
+-dim space
+
+2
+2
+𝑒 −𝑑 𝑖,𝑗 /(2𝜎 )
+
+σ𝑘≠𝑖 𝑒 −𝑑 𝑖,𝑘 2 /(2𝜎2
+
+where
+𝜎 is a hyperparameter called perplexity (equal to roughly
+the no. neighbors to consider, 5 to 50)​.
+
+1. mapping
+
+𝑝𝑗|𝑖
+𝑞𝑗|𝑖
+2. mapping
+
+Adjust
+the
+Embedding
+by
+gradient
+descent
+
+𝑝𝑗|𝑖 =
+
+𝑒
+
+−𝑑 𝑖,𝑗 2 /(2𝜎2 )
+
+σ𝑘≠𝑖 𝑒
+
+−𝑑 𝑖,𝑘 2 /(2𝜎2
+
+𝑝𝑗|𝑖
+0.32 0.33 0.17 0.18
+0.31
+
+0.31 0.18 0.20
+
+0.32 0.32
+
+0.18 0.19
+
+0.19 0.22 0.21
+
+𝜎=5
+
+0.20 0.22 0.22
+
+0.38
+0.36
+
+1. (Compute pairwise similarities in the original space)
+For any ordered two points 𝒙𝒊 and 𝒙𝑗 ,
+-- Computes the distance 𝑑(𝑖, 𝑗) between the two points
+-- Compute a conditional probability using Gaussian distribution
+𝑝𝑗|𝑖 =
+
+Points in high
+-dim space
+
+2
+2
+𝑒 −𝑑 𝑖,𝑗 /(2𝜎 )
+2
+2
+σ𝑘≠𝑖 𝑒 −𝑑 𝑖,𝑘 /(2𝜎
+
+1. mapping
+
+where
+𝜎 is a parameter called perplexity (equal to roughly
+the no. neighbors to consider, 5 to 50)​.
+
+𝑝𝑗|𝑖
+
+2. (Compute pairwise similarities in the 2-dimensional space)
+For each pair of image points 𝒚𝒊 and 𝒚𝒋 ,
+-- Compute a conditional probability but using a
+t-distribution (with one degree of freedom)
+
+𝑞𝑗|𝑖
+
+𝑞𝑗|𝑖 =
+
+1+𝑑(𝒚𝒊 ,𝒚𝒋 )2
+
+−1
+
+−1
+σ𝑘≠𝑖 1+𝑑(𝒚𝒊 ,𝒚𝒋 )2
+
+2. mapping
+
+Adjust
+the
+Embedding
+by
+gradient
+descent
+
+Dim 2
+
+Dim 2
+
+Dim 1
+
+Dim 1
+
+𝑞𝑗|𝑖 =
+
+1+𝑑(𝒚𝒊 ,𝒚𝒋 )2
+
+−1
+
+σ𝑘≠𝑖 1+𝑑(𝒚𝒊 ,𝒚𝒋 )2
+
+−1
+
+𝑞𝑗|𝑖
+0.32 0.30 0.16 0.22
+0.33
+
+0.25 0.17 0.25
+
+0.32 0.26
+
+0.18 0.24
+
+0.20 0.21 0.21
+
+0.23 0.24 0.23 0.30
+
+0.38
+
+Embedding conditional probabilities
+
+𝑝𝑗|𝑖
+0.32 0.33 0.17 0.18
+0.31
+
+0.31 0.18 0.20
+
+0.32 0.32
+
+0.18 0.19
+
+0.19 0.22 0.21
+0.20 0.22 0.22
+
+0.38
+0.36
+
+0.32 0.30 0.16 0.22
+0.33
+
+0.25 0.17 0.25
+
+0.32 0.26
+
+0.18 0.24
+
+0.20 0.21 0.21
+0.23 0.24 0.23 0.30
+
+0.38
+
+1. (Compute pairwise similarities in the original space)
+For any ordered two points 𝒙𝒊 and 𝒙𝑗 ,
+-- Computes the distance 𝑑(𝑖, 𝑗) between the two points
+-- Compute a conditional probability using Gaussian distribution
+2
+
+2
+
+𝑒 −𝑑 𝑖,𝑗 /(2𝜎 )
+𝑝𝑗|𝑖 = σ
+2
+2
+𝑘≠𝑖 −𝑑 𝑖,𝑘 /(2𝜎 )
+
+where
+𝜎 is a parameter called perplexity (equal to roughly
+the no. neighbors to consider, 5 to 50)​.
+2. (Compute pairwise similarities in the 2-dimensional space)
+For each pair of image points 𝒚𝒊 and 𝒚𝒋 ,
+-- Compute a conditional probability but using a student’s
+t-distribution (with one degree of freedom)
+
+𝑞𝑗|𝑖 = σ
+
+1+ 𝒚𝑖 −𝒚𝑗
+
+Points in high
+-dim space
+
+2 −1
+
+𝑘≠𝑖 1+ 𝒚𝑖 −𝒚𝑘
+
+2 −1
+
+3. Starting from an initial embedding to find a good 2D embedding
+by minimizing the loss function for the two distributions recursively:
+ℒ 𝒚1 , 𝒚2 , … , 𝒚𝑛 = σ1≤𝑖≤𝑛 σ𝑗≠𝑖 𝑝𝑗|𝑖 log 𝑝𝑗|𝑖 − log 𝑞𝑗|𝑖
+
+(KL divergence loss function)
+
+mapping
+
+𝑝𝑗|𝑖
+𝑞𝑗|𝑖
+mapping
+
+Adjust
+the
+Embedding
+by
+gradient
+descent
+
+PCA
+
+T-SNE
+
+Deterministic, linear, global
+dimensionality reduction
+
+Random, non-linear, local
+dimensionality reduction
+
+(Idea) Eigen-decomposition of covariance
+matrix
+
+K-nearest neighbor embedding
+
+(Hyperparameters) Nos. of PCs.
+
+Perplexity, which controls how the algorithm
+balances local versus global relationships in
+the data. Learning rate
+
+(Applications) Data analysis,
+denoising compression
+
+Visualization, data analysis
+
+200 random points
+generated from 4 points
+by using random
+(Gaussian) jump
+in 100-dim space
+
+Perplexity
+
+tSNE results with different perplexity for MNIST dataset
+
+Summary
+PCA
+
+T-SNE
+
+uMAP
+
+Deterministic, linear, global
+method
+
+Non-linear, method (focusing
+on local structure)
+
+Non-Linear method
+(focusing on both local and global
+structure)
+
+(Idea) Eigen-decomposition of
+covariance matrix
+
+K-nearest neighbor embedding Mapping to weighted graph
+through k-nearest neighbors
+
+(Hyperparameters) Nos. of PCs.
+
+Perplexity, learning rate
+
+The number of neighbors; mini.
+distance in the embedding
+
+(Scalability) Highly scalable for
+large dataset
+
+Computational expensive on
+large datasets
+
+Faster than t-SNE. Work well with
+large datasets
+
+(Applications) Data analysis,
+denoising compression
+
+Visualization, data analysis
+
+Analysis of scRNAseq data
+
+PCA in sklearn.decomposition
+
+TSNE in sklearn.manifold
+
+uMAP library
+
+https://distill.pub/2016/misread-tsne/
+https://pair-code.github.io/understanding-umap/
+
+

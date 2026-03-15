@@ -1,0 +1,1174 @@
+MSI5102
+Essentials of Machine Learning:
+Lecture 5 Clustering
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Traditional ML
+Algorithm
+Supervised
+
+Unsupervised
+
+Supervised Learning
+New Sample
+(-3, -8)
+Labeled Training Data
+Gene 1
+
+Gene 2
+
+Cancer?
+
+Tissue 1
+
+12
+
+4
+
+Y
+
+Tissue 2
+
+-7
+
+-10
+
+N
+
+Tissue 3
+
+8
+
+2
+
+Y
+
+Tissue 4
+
+6
+
+8
+
+Y
+
+Classifier
+Learning algorithm
+
+f
+“N”
+
+Traditional ML
+Algorithm
+Supervised
+
+Regression
+Linear
+regression
+KNN
+Decision Tree
+Random Foress
+XGBoost
+
+Unsupervised
+
+Classification
+
+Linear square
+Logistic regression
+SVM
+KNN
+Decision Tree
+Random Foress
+XGBoost
+
+▪ The combination of feature mapping and a linear model can be used
+to obtain a more complex model
+▪ Example: To capture the interaction between two symptoms for disease prediction,
+we can introduce an interaction feature into the model
+
+𝑓 = 𝑤0 + 𝑤1 𝑚 + w2 𝑥 + w3 𝑦 + w4 𝑥𝑦
+
+Unsupervised Learning (Clustering)
+Unlabeled data
+
+Gene1
+P5
+
+P1
+
+P2
+
+P4
+
+Cluster assignment
+
+Gene Gene
+1
+2
+
+P3
+P6
+
+P7
+
+P1
+
+3
+
+0
+
+P2
+
+-1
+
+1
+
+P3
+
+1
+
+-1
+
+P4
+
+1
+
+0
+
+P5
+
+3
+
+-1
+
+P6
+
+-2
+
+0.5
+
+P7
+
+-2
+
+1.5
+
+Gene1
+
+Learning algorithm
+
+-- Unlabeled data is cheap to obtain
+-- (Idea) Want to assign nearby (similar) points to the same group
+
+1
+
+1
+
+1
+
+1
+2
+2
+
+2
+
+Traditional ML
+Algorithm
+Supervised
+
+Regression
+Linear
+regression
+
+Unsupervised
+
+Classification
+
+Linear square
+Logistic regression
+SVM
+
+KNN
+
+KNN
+
+Decision Tree
+Random Forest
+XGBoost
+
+Decision Tree
+Random Forest
+XGBoost
+
+Clustering
+
+K-Means
+K-Modes
+Hierarchical
+
+Dimensionality
+Reduction/
+Visualization
+Principle
+Component
+Analysis
+(PCA)
+T-SNE, U-map
+and etc
+
+Clustering
+
+▪ Clustering is an unsupervised learning task where unlabeled data are provided
+▪ The objective is to discover structure in the data by grouping similar samples into
+clusters
+
+Genes
+
+By Clustering
+Genes with
+similar expression
+
+Experiments
+
+Experiments with
+same expression pattern
+
+Clustering Problem
+Input: n training points [𝒗1 , 𝒗2 , … , 𝒗𝑛 ]
+Output: Assignment of each point to one of k clusters
+z = 𝑧1 , 𝑧2 , ⋯ , 𝑧𝑛 , 𝑧𝑖 ∈ 1, 2, … , 𝑘 ,
+to maximize the within-clusters similarities under
+a similarity metric.
+K=3
+
+Poor Clustering
+
+Good Clustering
+
+(Maybe) Better Clustering
+
+Similarity/Dissimilarity metrics
+▪ Similarity/Dissimilarity between observations can be measured by
+distance
+▪ Smaller distance ⇒ more similar;
+▪ Larger distance ⇒ more dissimilar
+Euclidean
+
+For two data points in k-dimensional feature space
+A= 𝑎1 , 𝑎2 , … , 𝑎𝑘 , 𝐵 = 𝑏1 , 𝑏2 , … , 𝑏𝑘
+
+The Euclidean distance E(A, B) and Manhattan distance M(A, B) are:
+• (Case k=1) E(A, B) = 𝑎1 − 𝑏1 = M(A, B).
+• (Case k=2)
+Manhattan
+
+E(A, B) =
+
+𝑎1 − 𝑏1 2 + 𝑎2 − 𝑏2 2 ;
+
+M(A, B) = 𝑎1 − 𝑏1 + 𝑎2 − 𝑏2
+
+For time series data points
+S = 𝑎1 , 𝑎2 , … , 𝑎𝑘 , 𝑇 = 𝑏1 , 𝑏2 , … , 𝑏𝑘
+The Pearson correlation coefficient P(A, B) is used:
+
+𝑃 𝐴, 𝐵 =
+
+ത
+σ1≤𝑗≤𝑘 𝑎𝑗 −𝑎ത (𝑏𝑗 −𝑏)
+σ1≤𝑗≤𝑘 𝑎𝑗 −𝑎ത
+
+2
+
+σ1≤𝑗≤𝑘 𝑏𝑗 −𝑏ത
+
+2
+
+▪
+
+P(A, B) equals the covariance divided by the product of standard deviations
+
+▪
+▪
+▪
+▪
+▪
+
+−1 ≤ 𝑃 𝐴, 𝐵 ≤ 1.
+P(A, B) = 1: perfect positive linear relationship
+P(A, B) = −1: perfect negative linear relationship
+P(A, B) = 0: no linear relationship
+Measures linear association only
+
+Hamming Distance
+▪ The Hamming distance between two strings of the same length
+equals the number of positions in which two strings have different letters
+▪ Examples:
+-- H(“ACTGA”, “ATTGG”) = 2
+-- H(“00110”, “01011”) = 3
+
+Hamming distance for categorical feature vectors
+▪ The Hamming distance between two data points with
+categorical features is the number of features in which their values differ.
+▪ Example:
+Person A: (Red, Small, Male, Urban)
+Person B: (Blue, Small, Female, Urban)
+The Hamming distance between A and B is 2.
+
+Applications of Clustering
+▪
+
+Widely used in data science
+
+Community
+detection
+in Social
+networks
+
+Recommendation
+systems
+
+Clustering
+Anomaly
+detection
+
+Market
+segmentation
+
+▪ In biomedicine and biology,
+-- Discovery of subtypes of cancers and other heterogeneous diseases
+-- Classification of bacteria into different species
+-- and other applications
+
+K-means Clustering
+
+Idea of K-means Clustering
+▪ K-means algorithm repeatedly partitions data points into
+a pre-specified number (K) of non-overlapping clusters
+▪ K is a hyperparameter
+▪ Each cluster is represented by its centroid,
+i.e., the arithmetic mean of the points in the cluster
+▪ K-means minimizes the within-cluster variance
+
+For a cluster 𝐶 = 𝑃1 , 𝑃2 , … , 𝑃𝑡 ,
+Its centroid is
+1
+𝑃 = 𝑃1 + 𝑃2 + ⋯ + 𝑃𝑡
+𝑡
+
+▪ Objective function: Minimize the total within-cluster variation (WCV):
+MinC1,C2,…,CK 𝑊𝐶𝑉 𝐶1 + 𝑊𝐶𝑉 𝐶2 + ⋯ + 𝑊𝐶𝑉 𝐶𝐾
+▪ If we use Euclidean distance,
+𝑊𝐶𝑉 𝐶 =
+
+1
+σ𝑃∈𝐶 Euclid_Distance 𝑃, 𝜇𝐶 2
+|𝐶|
+
+where 𝜇𝐶 is the centroid.
+▪ We want to partition the data points into K clusters
+such that the total WCV is as small as possible
+▪
+
+(Why?)
+-- Small WCV → points are tightly grouped
+-- Large WCV → points are widely spread
+
+K-Means Algorithm
+1: Specify the number K of clusters to assign.
+2: Randomly initialize K centroids
+3: Repeat
+3.1: Assignment: Assign each point to its closest centroid
+3.2: Update: Compute the new centroid of each cluster
+until the centroid positions do not change
+
+▪ Consider 6 points in 1-dimensional space
+
+𝑥1
+
+𝑥2 𝑥3
+
+𝑥1
+
+𝑥2 𝑥3
+
+𝑥7
+
+𝑥7
+
+𝑥4
+
+𝑥5 𝑥6
+
+𝑥4
+
+𝑥5 𝑥6
+
+Example: Illustration of K-Means. K=2
+Initialization:
+Step 1: Assignment
+
+𝜇1
+
+𝜇2
+
+0
+
+2
+
+10
+
+12
+
+0
+
+2
+
+10
+
+12
+
+0
+
+2
+
+10
+
+12
+
+0
+
+2
+
+10
+
+12
+
+0
+
+2
+
+10
+
+12
+
+Step 1: Update centroid
+8
+
+Step 2: Assignment
+
+Step 2: Update centroid
+
+Example: K=4
+
+Initialization
+
+1st Iteration
+
+K-Means Pros and Cons
+Pros
+▪ Simple!
+▪ K-means is fast and works well on very large datasets
+▪ Can help visualize the data and facilitate detecting trends or outliers
+▪ The k-means algorithm is among the most used algorithms
+Cons
+▪ The hyperparameter K must be decided before the algorithm starts
+▪ The final assignment of data points to clusters can depend on the initial
+location of the centroids, as well as K
+
+Issue 1: Initial positioning of the centroids matter!
+
+Solutions
+-- Run K-means a number of times and take the best
+-- Use K-means++, available in Python
+
+K-means++ Methods for Centroid Initialization
+
+Issue 2: How to Choose K?
+▪ (Solution 1) Use priori knowledge about application domain
+-- Partition countries into three classes (using GDP and population):
+underdeveloped, developing and developed
+-- The subtypes of cancers should be correlated to survival rate
+GDP
+
+population
+
+Issue 2: How to Choose K?
+▪ (Solution 2) Search for a good K.
+Try different values of k and
+evaluate quality of results using
+-- the Elbow method, or
+-- the Silhouette method
+
+K=2
+
+Total WCV(X, k)
+
+400
+
+K=3
+
+Elbow point
+
+1
+
+2
+
+3
+
+4
+
+5
+
+https://numiqo.com/statistics-calculator/cluster
+
+The Silhouette method
+
+c(i): the average
+distance from
+a point to the
+centroid x
+in a cluster 𝐶𝑖 ,
+called cohesion
+
+▪ Smaller within-cluster cohesion
+→ better clustering
+▪ Larger intra-cluster separation
+→ better clustering
+s(i): the average
+distance from
+the centroid x to a
+point
+in another cluster,
+taken minimum,
+called separation
+
+▪ Define
+
+▪
+
+▪
+
+𝑠 𝑖 −𝑐(𝑖)
+r 𝑖 =
+max{𝑐 𝑖 ,𝑠 𝑖 }
+−1 < 𝑟 𝑖 ≤ 1
+Larger r(i) → better clustering
+
+Silhouette method
+
+Silhouette score
+
+0.5
+0.4
+0.3
+0.2
+0.1
+2
+
+4
+
+6
+
+8
+10 12
+No. of Clusters
+
+K=6 is a good choice
+
+14
+
+A data set for exercise on K-Means
+ID
+
+Height
+
+Length
+
+Width
+
+1
+
+1.2
+
+2.1
+
+1.8
+
+2
+
+0.8
+
+1.9
+
+2.2
+
+3
+
+1.5
+
+2.3
+
+1.6
+
+4
+
+1.1
+
+2.0
+
+2.1
+
+5
+
+0.9
+
+1.7
+
+1.9
+
+6
+
+5.2
+
+6.1
+
+5.8
+
+7
+
+4.8
+
+5.9
+
+6.2
+
+8
+
+5.5
+
+6.3
+
+5.6
+
+9
+
+5.1
+
+6.0
+
+6.1
+
+10
+
+4.9
+
+5.8
+
+5.9
+
+11
+
+8.2
+
+1.1
+
+8.5
+
+12
+
+7.9
+
+1.3
+
+8.2
+
+13
+
+8.4
+
+0.9
+
+8.7
+
+14
+
+8.1
+
+1.2
+
+8.3
+
+15
+
+7.8
+
+1.0
+
+8.4
+
+00)
+
+K-Modes Algorithm
+
+▪ K-Modes is a variant of K-Means to handle categorical data
+▪ It uses modes instead of means as cluster centers
+▪ Objective: Minimize the total within-cluster dissimilarity to
+form homogeneous groups
+▪ Hamming distance is used here
+ID
+
+Investment Type
+
+Risk Tolerance
+
+Investment Duration
+
+1
+
+Stocks
+
+High
+
+Long-term
+
+2
+
+Bonds
+
+Low
+
+Short-term
+
+3
+
+Mutual Funds
+
+Medium
+
+Medium-term
+
+4
+
+ETFs
+
+High
+
+Long-term
+
+5
+
+Stocks
+
+Medium
+
+Short-term
+
+6
+
+Bonds
+
+Low
+
+Medium-term
+
+K-modes algorithm
+Input: A data set with categorical feature sand cluster number K;
+▪ Initialization Step: Randomly select K data points as initial cluster centers
+▪ Repeat until no assignment change
+• Assignment: For each data point:
+-- Compute Hamming distance to each center
+-- Assign the point to the cluster with the min. Hamming distance
+• Update: For each cluster:
+-- Update the cluster center by computing the mode
+(most frequent value for each attribute)
+
+The First and Second sample
+
+Mode A = First sample: (Stocks, High, Long-term)
+Mode B = Second sample: → (Bonds, Low, Short-term)
+ID
+
+Investment Type
+
+Risk Tolerance
+
+Investment Duration
+
+Dist. to A
+
+Dist. To B
+
+1
+
+Stocks
+
+High
+
+Long-term
+
+0
+
+3
+
+2
+
+Bonds
+
+Low
+
+Short-term
+
+3
+
+0
+
+3
+
+Mutual Funds
+
+Medium
+
+Medium-term
+
+3
+
+3
+
+4
+
+ETFs
+
+High
+
+Long-term
+
+1
+
+3
+
+5
+
+Stocks
+
+Medium
+
+Short-term
+
+2
+
+3
+
+6
+
+Bonds
+
+Low
+
+Medium-term
+
+3
+
+1
+
+Cluster A: {1, 4, 5}
+Cluster B: {2, 3, 6}
+
+(Tie for ID 3 → assign arbitrarily, say Cluster B)
+
+Update Modes Step
+Cluster A: {1, 4, 5}
+
+Attribute
+
+Values
+
+Mode
+
+Investment Type
+
+Stocks, ETFs, Stocks
+
+Stocks
+
+Risk Tolerance
+
+High, High, Medium
+
+High
+
+Duration
+
+Long-term, Long-term, Short-term
+
+Long-term
+
+Cluster B: {2, 3, 6}
+Attribute
+
+Values
+
+Mode
+
+Investment Type
+
+Bonds, Mutual funds, Bonds
+
+Bonds
+
+Risk Tolerance
+
+Low, Medium, Low
+
+Low
+
+Duration
+
+Short-term, Medium-term, Medium-term Medium-term
+
+Homework Question
+Apply the K-modes algorithm to the following dataset to partition the 5 samples
+into 2 clusters. Assume the initial modes are set to the first and fourth samples.
+Use Hamming distance as the dissimilarity measure and iterate until convergence.
+ID
+
+Color
+
+Size
+
+Mass
+
+1
+
+Red
+
+Small
+
+Large
+
+2
+
+Red
+
+Large
+
+Normal
+
+3
+
+Red
+
+Large
+
+Large
+
+4
+
+Blue
+
+Small
+
+Large
+
+5
+
+Blue
+
+Small
+
+Normal
+
+Hierarchical Clustering Method
+
+▪ K-Means
+– Divides objects into non-overlapping clusters such that
+each data object is in exactly one cluster
+▪ Hierarchical clustering
+– Output a set of nested clusters organized using a dendrogram
+– It does not require specifying the number of clusters in advance
+– It allows the analyst to examine various partitions of data with
+different granularity before deciding which one to use.
+– Most widely used method for gene expression data, enabling visualization
+
+𝑥1
+
+𝑥2
+
+𝑥3
+
+𝑥4
+
+𝑥5
+
+𝑥6
+
+𝑥7
+
+Idea
+▪ Initially, each point is considered as a cluster.
+▪ Merge the two closest clusters into a larger cluster recursively
+
+Key Points
+▪
+
+Distances between data points (vectors)
+(e.g., Euclidean, Manhattan, cosine)
+-- Manhattan (L1-norm) distance:
+-- Euclidean (L2-norm) distance:
+
+-- Cosine distance:
+𝑑 𝒙, 𝒚 = 1 −
+
+σ1≤𝑖≤𝑑 𝑥𝑖 𝑦𝑖
+𝑥𝑖2 𝑦𝑖2
+
+▪
+
+Distances between clusters 𝐶1 and 𝐶2
+-- Single linkage – min. distance between
+the points in two clusters
+𝐷 𝐶1 , 𝐶2 =
+
+min
+
+𝒙∈𝐶1 ,𝒚∈𝐶2
+
+𝑑(𝒙, 𝒚)
+
+-- Complete linkage – maximum distance
+𝐷 𝐶1 , 𝐶2 =
+
+m𝑎𝑥 𝑑(𝒙, 𝒚)
+
+𝒙∈𝐶1 ,𝒚∈𝐶2
+
+-- Average linkage – mean distance
+1
+
+𝐷 𝐶1 , 𝐶2 = 𝐶 ×|𝐶 |
+1
+
+σ
+
+2 𝒙∈𝐶 ,𝒚∈𝐶
+1
+2
+
+𝑑(𝒙, 𝒚)
+
+-- Centroid linkage – distance between centroids
+
+𝐷 𝐶1 , 𝐶2 = 𝑑 𝜇1 , 𝜇2
+
+▪ Cluster distance affects both results
+▪ There is no reason to choose one over others. Choose one according to your data.
+
+Hierarchical Clustering
+with
+Complete linkage
+
+Hierarchical Clustering
+with
+Average linkage
+
+Hierarchical Clustering
+with
+Single linkage
+
+Example: Clustering with average linkage
+Data points
+p1
+p2
+p3
+p4
+p5
+p6
+p7
+p8
+p9
+p10
+p11
+p12
+p13
+p14
+p15
+
+1.5
+3.5
+2.5
+4.5
+0.5
+8
+6
+10
+9
+11
+14
+16
+18
+17
+19
+
+Distance between
+Clusters A and B
+
+6.416
+
+5 1 3 2 4
+
+A
+
+7
+
+6 9 8 10
+
+B
+
+11
+
+12 14 13 15
+
+Pros and Cons of Hierarchical Clustering
+
+(visualization)
+
+Case Studies of Gene Expression Clustering Analysis
+
+▪ Cancer is a mutation disease
+For example, BRCA1 and BRCA2 are two mutational genes causing hereditary breast cancer
+▪ Clinical (IHC/FISH) subtypes
+-- Hormone-receptor positive (HR+, usually ER+, PR+):
+the most common; tends to grow more slowly and is treated with endocrine therapy
+-- HER2-positive (HER2+ with/without HR):
+more aggressive but highly targetable with anti-HER2 agents
+-- Triple-negative (ER–/PR–/HER2–):
+Lacks targets for endocrine or HER2 therapy; managed with chemotherapy
+▪
+
+Molecular “intrinsic” subtypes (PAM50).
+-- Luminal A (ER+, low proliferation, best prognosis)
+-- Luminal B(ER+, higher proliferation, worse prognosis than LumA),
+-- HER2-enriched (often HER2 pathway active)
+-- Basal-like (often overlaps with triple-negative)
+-- Normal-like (less commonly used clinically)
+
+Gene expression
+matrix with
+rows representing
+genes; and columns
+representing
+samples
+
+-- 84 experimental tissue samples taken from
+42 patients
+-- Expression of 1752 genes measured by PAM50
+microarray were analyzed using clustering methods
+
+Summary
+-- K-means and K-modes are introduced
+-- Hierarchical clustering and applications are discussed
+
+

@@ -1,0 +1,990 @@
+MSI5102
+Essentials of ML
+Lecture 2: Linear Models
+Zhang Louxin
+Department of Mathematics
+National University of Singapore
+matzlx@nus.edu.sg
+
+Recap of Last Lecture
+-- Three types of machine learning tasks
+-- Framework of the supervised learning task
+-- Mapping features to real vector space
+
+Example House Price Prediction:
+Scenario 1: area → price
+Scenario 2: area, #(bedroom) → price
+Scenario 3: (address, house or apt?, area, #(bedrooms)) → price
+
+Scenario 1: Area → price
+
+1500
+
+900
+
+1000
+500
+Area (sf)
+
+Sale price
+(thousand)
+
+600
+X $950
+
+300
+Sale price (thousand)
+
+500 1000 1500
+
+Area (sf)
+
+Scenario 2: area, #(bedroom) → price
+area
+
+500
+
+1000
+
+1500
+
+1
+
+490K
+
+965K
+
+1,440K
+
+2
+
+975K
+
+1,450K
+
+3
+
+985K
+
+1,460K
+
+#(b-room)
+
+price
+
+#(bed-room)
+
+1500K
+1000K
+500K
+
+500 1000 1500
+
+Area (sf)
+
+0K
+
+Scenario 3: (address, house or apt?, area, #(bedrooms)) → price
+▪ Address is not numeric, and has to be mapped to numbers using, for example, word2vect
+as categorical data (district)
+▪ Similarly, map Boolean feature “Hours or apt”?
+▪ Then, trains a model for prediction.
+
+Original
+feature Space
+
+Real Vector
+Space
+
+f
+
+price
+
+Learning a function f to predict the house sale price
+
+Linear Predictors
+
+Part 1: Training a Linear Model
+Regression Problem
+
+Input: k data points 𝒙 1 , 𝒚 1 , 𝒙 2 , 𝒚 2 , … , 𝒙 𝑘 , 𝒚 𝑘 ,
+where 𝒙 𝑖 ∈ 𝑿𝑛 (feature space), 𝒚 𝑖 ∈ 𝒀𝒎 (label space).
+Solution: a linear function 𝑓𝜽 𝒙 : 𝑿𝑛 → 𝒀𝒎 ,
+where 𝜽 is called the parameter vector,
+such that 𝑓𝜃 𝒙 approximates the label 𝒚 of x well
+
+Example Predicting house sale price based on the number of bedrooms) (𝑥1 ) and area (𝑥2 ).
+We aim to learn a linear function for the prediction of price (y):
+𝑦 = 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 , 𝜃 = 𝜃0 , 𝜃1 , 𝜃2 is a vector
+
+▪ A binary classification problem is a special case of regression where the label takes values
+0 or 1.
+
+How to estimate the parameter vector 𝜽?
+• The process of finding the parameters is called training, tuning or fitting the model
+• Input: k data points
+
+𝒙 1 ,𝑦 1 , 𝒙 2 ,𝑦 2 ,…, 𝒙 𝑘 ,𝑦 𝑘
+
+,
+
+(the dimension of the label space is usually 1)
+• Write 𝑦ො = 𝑓𝜃 𝒙 = 𝜃0 + 𝜃1 𝑥1 + ⋯ + 𝜃𝑛 𝑥𝑛 = σ𝑛𝑖=0 𝜃𝑖 𝑥𝑖 .
+• Write 𝑦ෝ (𝑖) = 𝑓𝜃 𝒙(𝑖) , the predicted value on feature vector 𝒙(𝑖) (i.e., for i-th data point)
+• Ideally, we want to find a parameter vector to minimize the difference
+𝑦ෝ (𝑖) − 𝑦 𝑖
+for every data point 𝑖
+• We introduce a general and effective training method, called
+Empirical Risk Minimization (ERM),
+to compute 𝜃 = 𝜃1 , 𝜃2 , ⋯ , 𝜃𝑛 .
+
+Loss function
+• A loss function typically compares model predictions against ground-truth labels
+to quantify the prediction error.
+• A loss function ℓ: 𝑌 𝑚 × 𝑌 𝑚 → 𝑅 is a function such that:
+-- Ideally, ℓ 𝒚, 𝒚 = 0, 𝒚 ∈ 𝑌 𝑚
+-- ℓ 𝒚′, 𝒚′′ ≥ 0, 𝒚′ , 𝒚′′ ∈ 𝑌 𝑚
+
+•
+
+ෝ, 𝒚 indicates a better guess 𝒚
+ෝ of y.
+A smaller value of ℓ 𝒚
+
+• Popular loss functions
+(𝑖)
+
+-- Absolute (or ℓ1 ) loss:
+
+ෝ , 𝒚 = σ𝑚
+ℓ 𝒚
+ො (𝑖) −𝑦
+𝑖=1 𝑦
+
+-- Square (or ℓ2 ) loss:
+
+ෝ , 𝒚 = σ𝑚
+ℓ 𝒚
+ො (𝑖) −𝑦
+𝑖=1 𝑦
+
+-- Fractional (relative) loss (for m=1): ℓ 𝑦ො , 𝑦 = max
+
+(𝑖) 2
+
+𝑦ො
+𝑦
+− 1, ො − 1
+𝑦
+𝑦
+
+ො
+𝑦|
+= e| ln 𝑦−ln
+−1
+
+• The empirical risk of the model is the average loss over the k data points,
+1
+𝑘
+
+1
+𝑘
+
+ℒ 𝜽 = σ𝑘𝑖=1 ℓ(𝒚ෝ 𝑖 , 𝒚(𝑖) ) = σ𝑘𝑖=1 ℓ 𝑓𝜃 (𝒙 𝑖 , 𝒚 𝑖 )
+
+Absolute (or ℓ1 ) loss:
+
+ℓ 𝐴, 𝐵 = 𝑥1 − 𝑥2 + |𝑦1 − 𝑦2 |
+
+Square (or ℓ2 ) loss:
+
+ℓ 𝐴, 𝐵 = (𝑥1 − 𝑥2 )2 + 𝑦1 − 𝑦2 2
+= the square of the length of AB
+
+B
+|𝑦1 − 𝑦2 |
+
+A
+𝑥1 − 𝑥2
+
+Example In the prediction of house sale price, we learn a function:
+𝑦 = 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 , where 𝜽 = 𝜃0 , 𝜃1 , 𝜃2 .
+where 𝑥1 represents no. of bedrooms
+𝑥2 represents area.
+Assume there are k (=3) data points
+
+𝒙 𝑖 ,𝑦 𝑖
+
+to use,
+
+• the empirical risk with square loss is:
+
+ℒ 𝜽
+
+1
+= σ3𝑖=1
+3
+
+2
+(𝑖)
+(𝑖)
+(𝑖)
+𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦
+
+It is a quadratic function, and its derivative exists
+• The empirical risk with absolute loss is:
+1
+3
+
+(𝑖)
+(𝑖)
+ℒ 𝜽 = σ3𝑖=1 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦 (𝑖) ,
+
+which is continuous, but not differentiable.
+
+ERM algorithm
+• ERM chooses 𝜽 to minimize empirical risk ℒ 𝜽 , i.e. ERM chooses 𝜽 by attempting
+to match the given data as well as possible, measured by the loss function ℓ.
+• For square loss, we can solve this minimization problem analytically.
+Example For the prediction of house sale price, we learn a linear function
+𝑦 = 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 , 𝜽 = 𝜃0 , 𝜃1 , 𝜃2 .
+Assume k (=3) data points 𝒙 𝑖 , 𝑦 𝑖 are given, the empirical risk with square loss is
+ℒ 𝜽
+
+1
+= σ3𝑖=1
+3
+
+2
+(𝑖)
+(𝑖)
+(𝑖)
+𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦
+
+The parameter 𝜽 that minimizes the ℒ 𝜽 satisf the following equations:
+𝜕ℒ 𝜽
+𝜕𝜃0
+
+(𝑖)
+(𝑖)
+= σ3𝑖=1 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦 (𝑖)
+
+2
+3
+
+𝜕ℒ 𝜽
+𝜕𝜃1
+
+= σ3𝑖=1
+
+𝜕ℒ 𝜽
+𝜕𝜃2
+
+(𝑖)
+(𝑖)
+= σ3𝑖=1 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦 (𝑖)
+
+2
+3
+2
+3
+
+(𝑖)
+
+= 2𝜃0 +
+
+(𝑖)
+
+(𝑖)
+
+𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦 (𝑖) 𝑥1
+
+(𝑖)
+
+2 3
+σ𝑖=1 𝑥1(𝑖)
+3
+
+=0
+
+𝑥2 = 0
+
+𝜃1 +
+
+2 3
+σ𝑖=1 𝑥2(𝑖)
+3
+
+𝜃2 − σ3𝑖=1 𝑦 𝑖 = 0;
+
+3 Sales Records (sale price unit 1k)
+Area (1Ksq)
+
+#(b-room)
+1
+2
+
+0.5
+
+1
+
+2
+
+The prediction model to learn is:
+
+𝑓 𝑥 = 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 ;
+
+491
+975
+
+3
+
+𝑥1 is the number of bedrooms;
+1,460
+
+𝑥2 is the area of a house;
+
+2
+2
+2
+1
+(1)
+(1)
+(2)
+(2)
+(3)
+(3)
+(1)
+(𝑖)
+(3)
+ℒ 𝜽 =
+𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦
++ 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦
++ 𝜃0 + 𝜃1 𝑥1 + 𝜃2 𝑥2 − 𝑦
+3
+1
+=
+𝜃0 + 𝜃1 ∗ 1 + 𝜃2 ∗ 0.5 − 491 2 + 𝜃0 + 𝜃1 ∗ 2 + 𝜃2 ∗ 1 − 975 2 + 𝜃0 + 𝜃1 ∗ 3 + 𝜃2 ∗ 2 − 1460 2
+3
+
+𝜕ℒ 𝜽
+1
+= 2 𝜃0 + 𝜃1 ∗ 1 + 𝜃2 ∗ 0.5 − 491 + 2 𝜃0 + 𝜃1 ∗ 2 + 𝜃2 ∗ 1 − 975 + 2 𝜃0 + 𝜃1 ∗ 3 + 𝜃2 ∗ 2 − 1460
+𝜕𝜃0
+3
+=
+
+2
+3𝜃0 + 6𝜃1 + 3.5𝜃2 − 2926
+3
+
+ℒ 𝜽
+=
+
+1
+𝜃0 + 𝜃1 ∗ 1 + 𝜃2 ∗ 0.5 − 491 2 + 𝜃0 + 𝜃1 ∗ 2 + 𝜃2 ∗ 1 − 975 2 + 𝜃0 + 𝜃1 ∗ 3 + 𝜃2 ∗ 2 − 1460 2
+3
+
+𝜕ℒ 𝜽
+𝜕𝜃1
+
+=
+
+1
+2 𝜃0 + 𝜃1 ∗ 1 + 𝜃2 ∗ 0.5 − 491 ∗ 1 + 2 𝜃0 + 𝜃1 ∗ 2 + 𝜃2 ∗ 1 − 975 ∗ 2 + 2 𝜃0 + 𝜃1 ∗ 3 + 𝜃2 ∗ 2 − 1460 ∗ 3
+3
+
+2
+= 6𝜃0 + 14𝜃1 + 8.5𝜃2 − 6821
+3
+
+𝜕ℒ 𝜽
+𝜕𝜃2
+
+=
+
+1
+2 𝜃0 + 𝜃1 ∗ 1 + 𝜃2 ∗ 0.5 − 491 ∗ 0.5 + 2 𝜃0 + 𝜃1 ∗ 2 + 𝜃2 ∗ 1 − 975 ∗ 1 + 2 𝜃0 + 𝜃1 ∗ 3 + 𝜃2 ∗ 2 − 1460 ∗ 2
+3
+
+=
+
+2
+3.5𝜃0 + 8.5𝜃1 + 5.25𝜃2 − 4140.5
+3
+
+To get the parameters: 𝜃0 , 𝜃1 , 𝜃2 , we solve the following equations
+𝜕ℒ 𝜽
+2
+= 3𝜃0 + 6𝜃1 + 3.5𝜃2 − 2926 = 0
+𝜕𝜃0
+3
+𝜕ℒ 𝜽
+2
+= 6𝜃0 + 14𝜃1 + 8.5𝜃2 − 6821 = 0
+𝜕𝜃1
+3
+𝜕ℒ 𝜽
+2
+= 3.5𝜃0 + 8.5𝜃1 + 5.25𝜃2 − 4140.5 = 0
+𝜕𝜃2
+3
+
+Area (1Ksq)
+
+#(b-room)
+1
+2
+3
+
+0.5
+
+1
+
+2
+
+491
+975
+1,460
+
+ERM algorithm
+• ERM chooses 𝜽 to minimize empirical risk ℒ 𝜽 , i.e. ERM chooses 𝜽 by attempting
+to match the given dataset as well as possible, measured by the loss function ℓ.
+• For square loss, we can solve this minimization problem analytically.
+• For absolute loss and others, we use a numerical minimization method to find 𝜽.
+
+• Different loss functions leads to different models.
+
+Nearest Neighbor Predictor
+
+Regression Problem
+Input: k data points 𝒙 1 , 𝒚 1 , 𝒙 2 , 𝒚 2 , … , 𝒙 𝑘 , 𝒚 𝑘 ,
+where 𝒙 𝑖 ∈ 𝑿𝑛 (feature space), 𝒚 𝑖 ∈ 𝒀𝒎 (label space).
+Solution: a function 𝑓
+
+𝒙 : 𝑿𝑛 → 𝒀𝒎 ,
+
+▪ Nearest Neighbor Predictor
+-- Given 𝒙 ∈ 𝑿𝑛 , find its nearest neighbour 𝒙 𝑗 among the given sample data
+(choose one arbitrarily if there are more choices)
+-- take 𝒚 𝑗 as the predicted value g(𝒙)
+▪ This method needs a distance function
+▪ Trivial training, requiring little computation
+▪ The function g computed here is a piecewise linear function of 𝒙.
+
+Example: Data points: (1, 1.5), (2.5, 3), (4, 2), (6, 4.5)
+The predictor function is mathematically
+defined as:
+1.5,
+
+𝑖𝑓 𝑥 ≤ 1.75,
+3,
+𝑖𝑓 1.75 < 𝑥 ≤ 3.25
+𝑔 𝑥 =
+2,
+𝑖𝑓 3.25 < 𝑥 ≤ 5
+4.5,
+𝑖𝑓 𝑥 > 5
+
+K-Nearest Neighbor Predictor
+Given 𝒙 ∈ 𝑿𝑛 , find its k nearest neighbours 𝒙 𝑗1 , 𝒙 𝑗2 , …, 𝒙 𝑗𝑘
+among the given sample data
+▪ Take the average of the associated labels
+▪
+
+ෝ=g 𝒙 =
+𝒚
+
+1
+𝑘
+
+𝒚 𝑗1 + 𝒚 𝑗2 + ⋯ + 𝒚 𝑗2
+
+as the predicted value g(𝒙).
+ෝ
+▪ Sometimes, use a weighted average to obtain the predicted value 𝒚
+2
+
+Regularized Linear Regression
+
+Sensitivity of A Model
+• An important attribute of a model is its insensitivity property
+• A model 𝑓𝜃 is insensitive if for similar feature vectors 𝒖, 𝒗 in the feature space,
+the predicted values 𝑓𝜃 𝒖 and 𝑓𝜃 𝒗 are close,
+i.e., if the features are similar, the prediction values are also close
+• Insensitive predictors often give good prediction on unseen data,
+especially when you don’t have much data
+• Insensitivity is therefore a desirable property for a predictor.
+
+In the linear model with the square loss,
+Let 𝒖, 𝒗 be two vectors in the n-dimensional feature space, say
+𝒖 = 𝑢1 , 𝑢2 , ⋯ , 𝑢𝑛 ; 𝒗 = 𝑣1 , 𝑣2 , ⋯ , 𝑣𝑛 .
+
+Assume the label space is 1-dimensional,
+𝑓𝜃 𝒖 − 𝑓𝜃 𝒗 = σ𝑘𝑖=1 𝜃𝑖 𝑢𝑖 − σ𝑘𝑖=1 𝜃𝑖 𝑣𝑖
+= σ𝑘𝑖=1 𝜃𝑖 (𝑢𝑖 − 𝑣𝑖 )
+≤
+
+σ𝑘𝑖=1 𝜃𝑖2 σ𝑘𝑖=1(𝑢𝑖 − 𝑣𝑖 )2
+
+(Cauchy–Schwarz inequality)
+
+implying that
+If σ𝑘𝑖=1 𝜃𝑖2 is small, the linear model has the insensitivity property.
+
+Regularized ERM algorithm
+• ERM chooses 𝛉 to minimize the weighted sum ℒ 𝜽 + 𝜆𝑟 𝜃 , 𝑤ℎ𝑒𝑟𝑒 𝑟 𝜃 = σ𝑘𝑖=1 𝜃𝑖2
+• 𝜆 ≥ 0 , called the regularization hyper-parameter.
+• When 𝜆 = 0, regularized ERM becomes ERM.
+• Regularized ERM is a method to balance
+-- good fit on the sample data
+-- insensitivity for better performance on unseen data.
+• For square loss, we can solve this minimization problem analytically.
+• For absolute loss and others, we use a numerical minimization
+method to find 𝜽.
+1.0
+
+Regularization hyper-parameter Search Method
+
+0.9
+0.8
+
+𝑟(𝜃)
+
+ℒ 𝜽
+
+0.7
+
+𝑓𝜃 𝜆
+
+0.6
+0.5
+
+10−4
+
+10−2
+
+1
+
+𝝀
+
+102
+
+104
+
+ERM versus Regularized ERM
+• With ERM, you choose the model parameter θ that minimizes 𝓛(θ)
+• with RERM, you choose a model parameter θ that does not minimize 𝓛(θ)
+but it is less sensitive than the ERM predictor, and therefore
+• hopefully makes better predictions on new, unseen data
+
+Part 3: Model Generalization
+•
+
+We construct a model based on some sample data, called training data
+
+•
+
+We would like it to work well on out-of-sample data, which are not used
+to train the prediction model. But this is not always true.
+
+•
+
+If it does, we say that the model generalizes,
+It will make good prediction on data it has never seen.
+
+•
+
+If it doesn’t, it fails to generalize or is overfit.
+Model Performance Metrics for Regression Problem
+Root Mean Square Error (RMSE) (for scalar y):
+
+1
+σ1≤𝑖≤𝑘 𝑦ො 𝑖
+𝑘
+
+−𝑦
+
+1
+𝑘
+
+Mean Absolute Error (MAE) (for scalar y): σ1≤𝑖≤𝑘 𝑦ො (𝑖) − 𝑦 (𝑖)
+1
+|𝑦ො (𝑖) −𝑦 (𝑖) |
+σ
+Mean Fractional Error (for positive y and 𝑦):
+ො
+𝑘 1≤𝑖≤𝑘 max{𝑦ො 𝑖 ,𝑦 (𝑖) }
+
+1/2
+𝑖 2
+
+• Assume we obtain a linear model 𝑦ො = 𝜃0 + 𝜃1 𝑥1
+• We trained the model with 12 (blue) sample points, RMSE is 0.07
+• We used this to predict y for the 14 out-of-sample red points, RMSE 0.073
+• This is a good model that generalize well.
+
+Choosing among Candidate Models
+• Validation is a good method to choose among candidate models
+• Typically we choose model among candidates with smallest test error
+• In some cases, might accept a bit larger test error in favor of a ‘simpler’
+model (because of interpretability)
+
+Example Data is split into 18 training and 9 validation samples.
+We trained three models: linear, quadratic and cubic poly. model,
+From training samples and used RMSE to measure their performance.
+Linear quadratic cubic
+Train RMSE 0.0821 0.0742
+Test RMSE 0.1120 0.0800
+
+0.017
+0.025
+
+RMSE
+0
+
+2
+
+4
+
+6
+
+8
+
+10
+
+14
+
+The degree of polynomial models
+Example (con’t)
+-- Split 60 data samples into 48 training and 12 validation samples.
+-- RMSE on training dataset decreasing with increasing degree.
+-- But the test RMSE suggests best choice of the degree-5 polynomial model.
+
+Model Validation Method
+• (idea) divide randomly the input data into two sets, training and validation
+(80/20 or 90/10 are common splits)
+• Use the training dataset to choose the model
+• Use the validation dataset to evaluate the model, using a performance metric.
+• This provides an honest simulation of how the predictor performs on unseen data.
+
+• Ideally, the model’s performance on the training dataset should be similar
+to its performance on the validation dataset.
+•
+
+In practice, there are four common scenarios:
+-- Small error on both training and validation datasets → good generalization.
+-- Small error on the validation set, but larger error on the training set (unusual, but possible).
+-- Small training error but large validation error → overfitting.
+-- Large error on both training and validation datasets → underfitting or model bias.
+
+underfitting
+
+overfitting
+validation curve
+
+Loss
+
+Training curve
+Low complexity model
+
+advanced model
+
+Cross Validation
+• An extension of out-of-sample validation:
+-- divide the data into k folds
+-- for each j,
+fit the model on all data but fold j
+and evaluate predictor on fold j
+-- use average test error and standard deviation ,
+across the folds, to judge the model
+Standard deviation of fold test error gives idea of
+-- the variability of the test error, and, therefore,
+-- how well model generalizes across folds
+
+Logistic Regression for Binary Classification
+
+Binary Classification Problem
+
+Input: s positives 𝒙 1 , 1 , 𝒙 2 , 1 , … , 𝒙 𝑠 , 1 ,
+t negatives 𝒛 1 , −1 , 𝒛 2 , −1 , … , 𝒛 𝑡 , −1
+where 𝒙 𝑖 , 𝒛 𝑗 ∈ 𝑿𝑚 (feature space) and
+the label space Y = {1, -1}.
+Solution: A linear predictor 𝑓𝜽 : 𝑿𝑚 → 𝑹,
+where 𝜽 is the parameter vector,
+such that 𝑓෣
+𝜃 𝒙 hopfully outputs a positive value for
+post. sample x’s,
+and a negative value for neg. sample z’s.
+Example Use mammogram images to detect breast cancer
+
+Method
+•
+
+Select a loss function and a regularize
+
+•
+•
+
+Use Regularized ERM to fit
+Validate the model with the function 𝜅𝑟𝑓𝑛 + 𝑟𝑓𝑝 (called Neyman-Pearson loss)
+-- 𝑟𝑓𝑛 is the false negative rate, which answers:
+“Among all actual positives, what fraction did the model fail to detect?”
+-- 𝑟𝑓𝑝 is the false positive rate.
+
+-- 𝜅 is the relative penalty for mistaking on a positive sample, a hyperparameter.
+if 𝜅=1, the metric is simply the error rate.
+
+𝑟𝑓𝑛
+
+𝑟𝑓𝑝
+
+Logistic Regression and Support Vector Machine
+• Least square classifier:
+Use square loss and square regularizer
+• Logistic regression classifier:
+Use logistic loss (see below), and ℓ1 regularizer;
+-- It has a nice statistic explanation
+• Support vector machine (SVM): Use hinge loss and square regularizer
+
++
++
+
++
++ +
++
+
+_
+_
+
+_
+
+_ _
+_ _
+
+SVM finds an optimal linear function (hyperplane) that separates classes
+with the maximum margin.
+
+Choices of Loss functions: Square Loss
+
+• On negative sample, the square loss function is
+ℓ 𝑦,
+ො −1 = 𝑦ො − −1
+
+2
+
+= 𝑦ො + 1 2
+
+• Has a undesired property: the penalty for a negative value of 𝑦ො on negative samples
+should not be that large.
+• On positive sample, the discussion is symmetric.
+•
+
+ℓ 𝑦,
+ො 1 = 𝜅 𝑦ො − 1 2
+The Empirical Risk of the training is:
+𝓛 𝜽 =
+
+1
+𝑠+𝑡
+
+𝜅 σ𝑠𝑖=1 𝑓𝜽 𝑥 𝑖
+
+−1
+
+• Advantage: it has analytic solution.
+
+2
+
++ σ𝑡𝑗=1 𝑓𝜽 𝑧 𝑗
+
++1
+
+2
+
+Logistic Loss
+
+Logistic loss
+
+Square loss
+
+• On negative samples, the loss function is
+ℓ 𝑦,
+ො −1 = log 1 + 𝑒 𝑦ො
+• On positive samples, the loss function is
+ෞ
+ℓ 𝑦,
+ො 1 = 𝜅 log 1 + 𝑒 −𝑦
+
+•
+
+The Empirical Risk of the training is:
+
+𝓛 𝜽
+
+1
+=
+𝑠+𝑡
+
+𝜅 σ𝑠𝑖=1 log
+
+𝑖
+−𝑓
+𝑥
+𝜽
+1+𝑒
+
+• Advantage: Differentiable and convex
+
++ σ𝑡𝑗=1 log
+
+𝑗
+𝑓
+𝑧
+𝜽
+1+𝑒
+
+Hinge Loss
+
+• On negative samples, the loss function is
+ℓ 𝑦,
+ො −1 = 𝑦ො + 1 + = ቊ
+
+0 if 𝑦ො ≤ −1
+𝑦ො + 1 , otherwise
+
+• On positive samples, the loss function is
+0 if 𝑦ො ≥ 1
+ℓ 𝑦,
+ො 1 = 𝑦ො − 1 + = ቊ
+1 − 𝑦ො , otherwise
+•
+
+The Empirical Risk of the training is:
+𝓛 𝜽 =
+
+1
+𝑠+𝑡
+
+𝜅 σ𝑠𝑖=1 𝑓𝜽 𝑥 𝑖
+
+• Convex but differentiable
+
+− 1 + + σ𝑡𝑗=1 𝑓𝜽 𝑧 𝑗
+
++1 +
+
+Accuracy Evaluation
+• Assume you develop a ML model for cancer prediction with tissue samples
+• Confusion matrix
+Actual Label
+Cancerous
+Predicted Cancerous True Positives (TP)
+Outcome
+Benign
+False Negatives (FN)
+
+Benign
+False Positives (FP)
+True Negatives (TN)
+
+• Quantitative Metrics
+-- Accuracy:
+
+𝑇𝑃+𝑇𝑁
+𝑇𝑜𝑡𝑎𝑙 𝐶𝑎𝑠𝑒𝑠
+
+-- Precision:
+
+𝑇𝑃
+𝑇𝑃+𝐹𝑃
+
+-- Specificity:
+
+𝑇𝑁
+𝑇𝑁+𝐹𝑃
+
+-- Sensitivity (i.e. Recall):
+
+(not good for imbalanced data)
+
+𝑇𝑃
+𝑇𝑃+𝐹𝑁
+
+AUROC
+• Area Under the Receiver Operating Characteristic Curve
+• Plot Sensitivity (true positive rate) and 1-Specificity (false positive rate)
+at various threshold
+• AUROC =0.5 for random classifier
+• Compare different methods by comparing their AUROC
+
+from sklearn.metrics import roc_curve, auc
+fpr, tpr, thresholds = roc_curve(y_true, y_score)
+auroc = auc(fpr, tpr)
+print("AUROC:", auroc)
+
+AUPRC
+• Area Under the Precision-Recall Curve
+• Plot Precision and Recall at various threshold
+• AUROC =0.5 for random classifier
+
+Precision
+
+• Compare different methods when datasets are imbalanced
+
+from sklearn.metrics import precision_recall_curve, auc
+Random classifier
+
+Recall
+
+precision, recall, _ = precision_recall_curve(y_true, y_score)
+auprc = auc(recall, precision)
+
+Part 6: Warm Up Project (optional)
+Predict Next-Day Rain with Australian Weather Data
+https://www.kaggle.com/jsphyg/weather-dataset-rattle-package
+• Data The dataset contains 141,193 records with measurements
+of various weather attributes from multiple cities in Australia
+
+• Objective Use today’s weather measurements to predict rainfall
+tomorrow
+
+This project includes the following parts.
+Part 1. Write a Python program to extract records for Melbourne after:
+• Removing rows with missing values (i.e. NA)
+• Dropping the columns: Date, Sunshine, WindGustDir, WindDir9am, WindDir3pm
+Part 2. Map the features to a real vector space:
+• Keep numeric fields as they are and standardize them
+• Encode RainToday and RainTomorrow as {-1, 1}
+• Split the dataset into 90% training data and 10% validation data
+Part 3. Implement a linear model:
+𝑓𝜃 𝑥 = 𝜃0 + 𝜃1 𝑥1 + ⋯ + 𝜃𝑑 𝑥𝑑
+using
+• Logistic loss function and
+• Square regularization 𝑟 𝜃 = σ𝑑𝑖=1 𝜃𝑖2
+where d is the number of features.
+(Use a library that supports logistic regression models)
+Part 4. Add code to evaluate the error rate on the training and test data.
+
+Linear Models for Regression & Binary Classification
+Training pipeline for a linear model
+▪
+▪
+▪
+▪
+▪
+▪
+
+Linear predictor (model hypothesis)
+Empirical risk (loss) function
+Regularization and model complexity control
+Optimization / training algorithm
+Performance metrics (evaluation)
+Validation procedure
+-- train / validation / test split
+-- cross-validation
+
+Related baseline method
+▪ Nearest-neighbor predictors
+
+
